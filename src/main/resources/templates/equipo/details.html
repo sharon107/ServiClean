@@ -1,0 +1,35 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Detalles del Equipo</h1>
+    <div>
+        <hr />
+        <dl class ="row">
+            <dt class = "col-sm-2">ID</dt>
+            <dd class = "col-sm-10" th:text="${equipo.id}"></dd>
+
+            <dt class = "col-sm-2">Nombre</dt>
+            <dd class = "col-sm-10" th:text="${equipo.nombreEquipo}"></dd>
+
+            <dt class = "col-sm-2">Descripcion</dt>
+            <dd class = "col-sm-10" th:text="${equipo.descripcion}"></dd>
+
+            <dt class = "col-sm-2">Ubicacion</dt>
+            <dd class = "col-sm-10" th:text="${equipo.ubicacion}"></dd>
+
+            <dt class = "col-sm-2">Estado</dt>
+            <dd class = "col-sm-10" th:text="${equipo.estado}"></dd>
+
+            <dt class="col-sm-2">Fecha de Registro</dt>
+            <dd class="col-sm-10"
+                th:text="${#temporals.format(equipo.fechaRegistro, 'dd/MM/yyyy')}"></dd>
+        </dl>
+
+        <a th:href="@{/equipos/edit/{id} (id = ${equipo.id}) }" class="btn btn-outline-info">Editar</a>
+        <a th:href="@{/equipos}">Regresar</a>
+    </div>
+</div>
+</html>

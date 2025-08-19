@@ -22,8 +22,13 @@ public class Equipo {
     private String ubicacion;
     private String estado;
 
-    @Column(name = "fecha_registro")
-    private LocalDate fechaRegistro = LocalDate.now();
+    @Column(name = "fecha_registro", nullable = false, updatable = false)
+    private LocalDate fechaRegistro;
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaRegistro = LocalDate.now();
+    }
 
     public Integer getId()
     { return id; }
