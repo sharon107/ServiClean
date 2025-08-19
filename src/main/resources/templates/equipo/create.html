@@ -1,0 +1,30 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Crear nuevo Equipo</h1>
+    <form th:action="@{/equipos/save}" th:object="${equipo}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nombreEquipo">Nombre</label>
+                    <input type="text" class="form-control" th:field="*{nombreEquipo}" id="nombreEquipo" placeholder="Escriba el nombre del equipo" required>
+                    <label for="descripcion">Descripcion</label>
+                    <input type="text" class="form-control" th:field="*{descripcion}" id="descripcion" placeholder="Escriba la descripcion del equipo" required>
+                    <label for="ubicacion">Ubicacion</label>
+                    <input type="text" class="form-control" th:field="*{ubicacion}" id="ubicacion" placeholder="Escriba la ubicacion del equipo" required>
+                    <label for="estado">Estado</label>
+                    <input type="text" class="form-control" th:field="*{estado}" id="estado" placeholder="Escriba el estado del equipo" required>
+                    <label>Fecha de Registro</label>
+                    <p th:text="${#temporals.format(T(java.time.LocalDate).now(), 'dd/MM/yyyy')}"></p>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/equipos}">Regresar</a>
+    </form>
+</div>
+</html>

@@ -3,6 +3,9 @@ package org.ServiClean.modelos;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Usuarios")
 public class Usuario {
@@ -30,6 +33,9 @@ public class Usuario {
     private Rol rol;
 
     private Boolean estado = true;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Auditoria> auditorias = new ArrayList<>();
 
     public Integer getId()
     { return id; }
