@@ -1,0 +1,30 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Crear nueva Auditoria</h1>
+    <form th:action="@{/auditorias/save}" th:object="${auditoria}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_usuario">Id Usuario</label>
+                    <input type="text" class="form-control" th:field="*{id_usuario}" id="id_usuario" placeholder="Escriba el id del usuario" required>
+                    <label for="accion">Accion</label>
+                    <input type="text" class="form-control" th:field="*{accion}" id="accion" placeholder="Escriba la accion" required>
+                    <label for="tablaAfectada">Tabla Afectada</label>
+                    <input type="text" class="form-control" th:field="*{tablaAfectada}" id="tablaAfectada" placeholder="Escriba la tabla afectada" required>
+                    <label for="descripcion">Descripcion</label>
+                    <input type="text" class="form-control" th:field="*{descripcion}" id="descripcion" placeholder="Escriba la descripcion" required>
+                    <label>Fecha</label>
+                    <p th:text="${#temporals.format(T(java.time.LocalDate).now(), 'dd/MM/yyyy')}"></p>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/auditorias}">Regresar</a>
+    </form>
+</div>
+</html>

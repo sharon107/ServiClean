@@ -3,8 +3,6 @@ package org.ServiClean.modelos;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "Usuarios")
 public class Usuario {
@@ -27,11 +25,9 @@ public class Usuario {
     @NotBlank(message = "La contraseña es requerida")
     private String contraseña;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usuario_rol",
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id"))
-    private List<Rol> roles;
+    @ManyToOne
+    @JoinColumn(name = "id_rol", nullable = false)
+    private Rol rol;
 
     private Boolean estado = true;
 
@@ -65,17 +61,15 @@ public class Usuario {
     public void setContraseña(String contraseña)
     { this.contraseña = contraseña; }
 
+    public Rol getRol()
+    { return rol; }
+
+    public void setRol(Rol rol)
+    { this.rol = rol; }
+
     public Boolean getEstado()
     { return estado; }
 
     public void setEstado(Boolean estado)
     { this.estado = estado; }
-
-    public List<Rol> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Rol> roles) {
-        this.roles = roles;
-    }
 }
