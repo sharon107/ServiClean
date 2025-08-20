@@ -6,6 +6,7 @@ import org.ServiClean.servicios.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public class UsuarioService implements IUsuarioService {
 
     @Autowired
     private IUsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder; // Inyectamos el PasswordEncoder
 
     @Override
     public Page<Usuario> buscarTodosPaginados(Pageable pageable) {
@@ -34,6 +38,12 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public Usuario crearOEditar(Usuario usuario) {
+        // Ciframos la contraseña antes de guardarla en la base de datos
+        // Solo si se ingresó una contraseña nueva o al crear el usuario
+        if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) {
+            usuario.setContraseña(passwordEncoder.encode(usuario.getContraseña()));
+        }
+
         return usuarioRepository.save(usuario);
     }
 
