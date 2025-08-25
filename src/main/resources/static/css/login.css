@@ -22,7 +22,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(255,255,255,0.1)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="20" fill="url(%23a)"/><circle cx="80" cy="40" r="15" fill="url(%23a)"/><circle cx="40" cy="80" r="25" fill="url(%23a)"/></svg>') repeat;
             animation: float 20s ease-in-out infinite;
         }
 
@@ -69,17 +68,23 @@
         }
 
         .logo-badge {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
+            width: 140px;
+            height: 140px;
+            background: white;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 2rem;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.1),
+                0 5px 15px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
+            padding: 10px;
+            /* Código corregido para la imagen de fondo */
+            background: url('/img/Logo.jpeg') no-repeat center center;
+            background-size: contain;
         }
 
         .logo-badge::before {
@@ -89,9 +94,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
             transform: rotate(45deg);
-            animation: shine 3s ease-in-out infinite;
+            animation: shine 4s ease-in-out infinite;
         }
 
         @keyframes shine {
@@ -99,16 +104,21 @@
             50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
-        .logo-badge span {
-            font-size: 2rem;
-            color: white;
+        .logo-badge img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
             z-index: 1;
             position: relative;
         }
 
+        .logo-badge span {
+            display: none;
+        }
+
         h3 {
             text-align: center;
-            color: #1f2937;
+            color: #1f2937 !important;
             font-weight: 600;
             font-size: 1.5rem;
             margin-bottom: 2rem;
