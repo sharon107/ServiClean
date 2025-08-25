@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,25 +54,31 @@ public class UsuarioController {
     }
 
     @GetMapping("/create")
-    public String create(Usuario usuario, Model model){
-        // **CORRECCIÓN 1**
-        List<Rol> roles = rolService.obtenerTodos();
-        model.addAttribute("roles", roles);
+    public String create(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        model.addAttribute("roles", rolService.obtenerTodos());
         return "usuario/create";
     }
 
     @PostMapping("/save")
-    public String save(Usuario usuario, BindingResult result, Model model, RedirectAttributes attributes){
+    public String save(@ModelAttribute("usuario") Usuario usuario, BindingResult result, Model model, RedirectAttributes attributes){
         if(result.hasErrors()){
-            model.addAttribute(usuario);
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
-
-            // **CORRECCIÓN 2**
-            List<Rol> roles = rolService.obtenerTodos();
-            model.addAttribute("roles", roles);
-
+            model.addAttribute("roles", rolService.obtenerTodos());
             return "usuario/create";
         }
+
+        if(usuario.getRoles() != null){
+            usuario.setRol(usuario.getRoles().get(0));
+        }
+
+        if (usuario.getRoles() == null){
+            ArrayList<Rol> Listaroles = new ArrayList<Rol>();
+            Listaroles.add(usuario.getRol());
+
+            usuario.setRoles(Listaroles);
+        }
+
 
         usuarioService.crearOEditar(usuario);
         attributes.addFlashAttribute("msg", "Usuario creado correctamente");
@@ -95,9 +102,7 @@ public class UsuarioController {
         Optional<Usuario> usuarioOptional = usuarioService.buscarPorId(id);
         if (usuarioOptional.isPresent()) {
             model.addAttribute("usuario", usuarioOptional.get());
-            // **CORRECCIÓN 3**
-            List<Rol> roles = rolService.obtenerTodos();
-            model.addAttribute("roles", roles);
+            model.addAttribute("roles", rolService.obtenerTodos());
             return "usuario/edit";
         } else {
             attributes.addFlashAttribute("error", "El usuario no fue encontrado.");

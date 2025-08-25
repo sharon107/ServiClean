@@ -17,9 +17,8 @@ public class Reporte {
     @Column(name = "fecha_generado")
     private LocalDate fechaGenerado = LocalDate.now();
 
-    @ManyToOne
-    @JoinColumn(name = "generado_por")
-    private Usuario generadoPor;
+    @Column(name = "generado_por")
+    private String generadoPor;
 
     private String contenido;
 
@@ -41,10 +40,10 @@ public class Reporte {
     public void setFechaGenerado(LocalDate fechaGenerado)
     { this.fechaGenerado = fechaGenerado; }
 
-    public Usuario getGeneradoPor()
+    public String getGeneradoPor()
     { return generadoPor; }
 
-    public void setGeneradoPor(Usuario generadoPor)
+    public void setGeneradoPor(String generadoPor)
     { this.generadoPor = generadoPor; }
 
     public String getContenido()

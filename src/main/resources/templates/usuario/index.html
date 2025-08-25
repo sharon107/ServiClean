@@ -44,7 +44,13 @@
             <td th:text="${item.nombre}"></td>
             <td th:text="${item.apellido}"></td>
             <td th:text="${item.correo}"></td>
-            <td th:text="${item.rol.nombre}"></td>
+            <td>
+                <span th:each="rol, iterStat : ${item.roles}">
+                    <span th:text="${rol.nombre}"></span>
+                    <span th:if="${!iterStat.last}">, </span>
+                </span>
+                <span th:if="${#lists.isEmpty(item.roles)}">Sin Rol</span>
+            </td>
             <td th:text="${item.estado} ? 'Activo' : 'Inactivo'"></td>
             <td>
                 <a th:href="@{/usuarios/details/{id}(id=${item.id})}" class="btn btn-outline-secondary">Detalles</a>

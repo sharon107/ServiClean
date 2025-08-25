@@ -1,0 +1,64 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+
+    <div th:if="${mg != null}">
+        <script>
+            Swal.fire({
+            title: "confirmación",
+            text: '[[${msg}]]',
+            icon: "success"
+            });
+        </script>
+    </div>
+
+    <div th:if="${error != null}">
+        <script>
+            Swal.fire({
+            title: "Error",
+            text: '[[${error}]]',
+            icon: "error"
+            });
+        </script>
+    </div>
+
+    <h1>Listado de Reportes</h1>
+    <a th:href="@{/reportes/create}" class="btn btn-outline-primary">Nuevo reporte</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Fecha Generado</th>
+            <th>Generado Por</th>
+            <th>Contenido</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${reportes}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.tipo}"></td>
+            <td th:text="${item.fechaGenerado}"></td>
+            <td th:text="${item.generadoPor}"></td>
+            <td th:text="${item.contenido}"></td>
+            <td>
+                <a th:href="@{/reportes/details/{id}(id=${item.id})}" class="btn btn-outline-secondary">Detalles</a>
+                <a th:href="@{/reportes/edit/{id}(id=${item.id})}" class="btn btn-outline-info">Editar</a>
+                <a th:href="@{/reportes/remove/{id}(id=${item.id})}" class="btn btn-outline-danger">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                <a class="page-link" th:href="@{|/reportes?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
