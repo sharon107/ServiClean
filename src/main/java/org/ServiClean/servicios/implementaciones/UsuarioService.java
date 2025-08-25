@@ -38,10 +38,31 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public Usuario crearOEditar(Usuario usuario) {
-        // Ciframos la contraseña antes de guardarla en la base de datos
-        // Solo si se ingresó una contraseña nueva o al crear el usuario
-        if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) {
-            usuario.setContraseña(passwordEncoder.encode(usuario.getContraseña()));
+        // Si el ID es nulo, es un nuevo usuario, por lo que encriptamos la contraseña.
+        if (usuario.getId() == null) {
+            if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
+                usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+            }
+        } else {
+            // Es una edición de un usuario existente.
+            Optional<Usuario> usuarioExistenteOpt = usuarioRepository.findById(usuario.getId());
+
+            if (usuarioExistenteOpt.isPresent()) {
+                Usuario usuarioExistente = usuarioExistenteOpt.get();
+
+                // Si se proporcionó una nueva contraseña, la encriptamos.
+                if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
+                    usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+                } else {
+                    // Si no se proporcionó una nueva contraseña, mantenemos la que ya existe.
+                    usuario.setContrasena(usuarioExistente.getContrasena());
+                }
+            } else {
+                // Si el usuario a editar no se encuentra, lo tratamos como una creación.
+                if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
+                    usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+                }
+            }
         }
 
         return usuarioRepository.save(usuario);

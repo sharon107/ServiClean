@@ -19,26 +19,31 @@ public class ReporteService implements IReporteService {
 
     @Override
     public Page<Reporte> buscarTodosPaginados(Pageable pageable) {
+
         return reporteRepository.findAll(pageable);
     }
 
     @Override
     public List<Reporte> obtenerTodos() {
+
         return reporteRepository.findAll();
     }
 
     @Override
     public Optional<Reporte> buscarPorId(Integer id) {
+
         return reporteRepository.findById(id);
     }
 
     @Override
     public Reporte crearOEditar(Reporte reporte) {
+
         return reporteRepository.save(reporte);
     }
 
     @Override
     public void eliminarPorId(Integer id) {
+
         reporteRepository.deleteById(id);
     }
 }

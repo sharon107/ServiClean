@@ -1,0 +1,35 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Crear nuevo reporte</h1>
+    <form th:action="@{/reportes/save}" th:object="${reporte}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="tipo">Tipo de reporte</label>
+                    <input type="text" class="form-control" th:field="*{tipo}" id="tipo" placeholder="Escriba el tipo de reporte" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="generadoPor">Generado Por</label>
+                    <input type="text" class="form-control" th:field="*{generadoPor}" id="generadoPor" placeholder="Escriba su nombre" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="contenido">Contenido del reporte</label>
+                    <textarea class="form-control" th:field="*{contenido}" id="contenido" rows="5" placeholder="Escriba el contenido del reporte" required></textarea>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/reportes}">Regresar</a>
+    </form>
+</div>

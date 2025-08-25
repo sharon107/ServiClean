@@ -29,16 +29,16 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="contraseña">Contraseña</label>
-                    <input type="password" class="form-control" th:field="*{contraseña}" id="contraseña" placeholder="Escriba la contraseña" required>
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" class="form-control" th:field="*{contrasena}" id="contrasena" placeholder="Escriba la contraseña" required>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="rol">Rol</label>
-                    <select class="form-control" th:field="*{rol}" id="rol">
+                    <label for="roles">Roles</label>
+                    <select class="form-control" th:field="*{roles}" id="roles" multiple>
                         <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
                     </select>
                 </div>

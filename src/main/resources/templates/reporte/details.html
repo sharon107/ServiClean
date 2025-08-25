@@ -1,0 +1,30 @@
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Detalles del Reporte</h1>
+    <div>
+        <hr />
+        <dl class ="row">
+            <dt class = "col-sm-2">ID</dt>
+            <dd class = "col-sm-10" th:text="${reporte.id}"></dd>
+
+            <dt class = "col-sm-2">Tipo</dt>
+            <dd class = "col-sm-10" th:text="${reporte.tipo}"></dd>
+
+            <dt class = "col-sm-2">Fecha Generado</dt>
+            <dd class = "col-sm-10" th:text="${reporte.fechaGenerado}"></dd>
+
+            <dt class = "col-sm-2">Generado Por</dt>
+            <dd class = "col-sm-10" th:text="${reporte.generadoPor}"></dd>
+
+            <dt class = "col-sm-2">Contenido</dt>
+            <dd class = "col-sm-10" th:text="${reporte.contenido}"></dd>
+        </dl>
+
+        <a th:href="@{/reportes/edit/{id} (id = ${reporte.id}) }" class="btn btn-outline-info">Editar</a> |
+        <a th:href="@{/reportes}">Regresar</a>
+    </div>
+</div>
