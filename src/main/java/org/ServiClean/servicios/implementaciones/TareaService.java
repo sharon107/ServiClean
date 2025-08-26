@@ -41,4 +41,10 @@ public class TareaService implements ITareaService {
     public void eliminarPorId(Integer id) {
         tareaRepository.deleteById(id);
     }
+
+    @Override
+    public List<Tarea> obtenerHistorial() {
+        // Aquí puedes devolver todas las tareas o filtrarlas por estado completado, fecha, etc.
+        return tareaRepository.findAllByOrderByFechaAsignacionDesc(); // ejemplo: orden descendente por fecha
+    }
 }

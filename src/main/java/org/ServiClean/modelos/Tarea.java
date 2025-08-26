@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Tareas")
@@ -35,6 +37,9 @@ public class Tarea {
     private LocalDate fechaAsignacion = LocalDate.now();
 
     private String estado = "Pendiente";
+
+@ManyToMany(mappedBy = "tareas")
+private Set<Usuario> usuarios = new HashSet<>();
 
     public Integer getId()
     { return id; }

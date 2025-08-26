@@ -1,0 +1,157 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <div class="card card-hover p-4 mb-4 form-container">
+        <div class="form-title-wrapper">
+            <h2 class="form-title">Editar Tarea</h2>
+        </div>
+        <form th:action="@{/tareas/save}" th:object="${tarea}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="titulo">Título</label>
+                    <input type="text" class="form-control neumorphic-input" th:field="*{titulo}" id="titulo" placeholder="Escriba el nombre de la tarea" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="equipo">Equipo</label>
+                    <select class="form-control neumorphic-input" id="equipo" th:field="*{equipo}">
+                        <option th:each="equipo : ${equipos}" th:value="${equipo.id}" th:text="${equipo.nombre}" th:selected="${tarea.equipo != null && tarea.equipo.id == equipo.id}"></option>
+                        <option th:if="${tarea.equipo == null}" value="">Sin equipo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="fechaAsignacion">Fecha de asignación</label>
+                    <input type="date" class="form-control neumorphic-input" th:field="*{fechaAsignacion}" id="fechaAsignacion">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="estado">Estado</label>
+                    <select class="form-control neumorphic-input" id="estado" th:field="*{estado}">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En progreso">En progreso</option>
+                        <option value="Completada">Completada</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr class="neumorphic-divider">
+            <div class="d-flex justify-content-end">
+                <a th:href="@{/tareas}" class="btn neumorphic-btn me-2">Regresar</a>
+                <button type="submit" class="btn neumorphic-btn primary-btn">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        /* Estilos generales para el fondo del cuerpo */
+        body {
+            background-color: #e0e5ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        /* Contenedor principal de la tarjeta */
+        .form-container {
+            border-radius: 20px;
+            background: #e0e5ec;
+            box-shadow: 10px 10px 20px #c5c9d0, -10px -10px 20px #fbffff;
+            padding: 3rem;
+            max-width: 800px;
+            margin: 50px auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Título del formulario */
+        .form-title-wrapper {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .form-title {
+            display: inline-block;
+            padding: 10px 30px;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #555;
+            border-radius: 15px;
+            background: #e0e5ec;
+            box-shadow: 6px 6px 12px #c5c9d0, -6px -6px 12px #fbffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Inputs y Selects */
+        .neumorphic-input {
+            border-radius: 12px;
+            border: none;
+            padding: 12px 18px;
+            background: #e0e5ec;
+            box-shadow: inset 4px 4px 8px #c5c9d0, inset -4px -4px 8px #fbffff;
+            transition: box-shadow 0.3s ease;
+            color: #555;
+        }
+        .neumorphic-input:focus {
+            outline: none;
+            box-shadow: inset 2px 2px 5px #c5c9d0, inset -2px -2px 5px #fbffff;
+        }
+
+        /* Línea divisora */
+        .neumorphic-divider {
+            border: none;
+            height: 2px;
+            background: #d1d9e6;
+            margin: 3rem 0;
+            box-shadow: 1px 1px 3px #c5c9d0, -1px -1px 3px #fbffff;
+        }
+
+        /* Botones */
+        .neumorphic-btn {
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: #e0e5ec;
+            color: #555;
+            box-shadow: 6px 6px 12px #c5c9d0, -6px -6px 12px #fbffff;
+            transition: all 0.3s ease;
+        }
+        .neumorphic-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 16px #c5c9d0, -8px -8px 16px #fbffff;
+        }
+        .neumorphic-btn:active {
+            box-shadow: inset 4px 4px 8px #c5c9d0, inset -4px -4px 8px #fbffff;
+            transform: translateY(0);
+        }
+
+        /* Botón de guardar con color destacado */
+        .primary-btn {
+            background-color: #5cb85c;
+            color: white;
+            box-shadow: 6px 6px 12px rgba(92, 184, 92, 0.4), -6px -6px 12px #ffffff;
+        }
+        .primary-btn:hover {
+            box-shadow: 8px 8px 16px rgba(92, 184, 92, 0.6), -8px -8px 16px #ffffff;
+        }
+        .primary-btn:active {
+            box-shadow: inset 4px 4px 8px rgba(92, 184, 92, 0.5), inset -4px -4px 8px #ffffff;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</div>
+</html>

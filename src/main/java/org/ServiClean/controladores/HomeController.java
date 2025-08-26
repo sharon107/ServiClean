@@ -11,4 +11,9 @@ public class HomeController {
     public String index(){
         return "home/index";
     }
+
+    @GetMapping("/tarea/historial")
+    public String redirectToHistorial() {
+        return "redirect:/tarea/historial";
+    }
 }

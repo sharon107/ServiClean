@@ -1,0 +1,124 @@
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+<div layout:fragment="content">
+    <h1>Eliminar tarea</h1>
+
+    <div class="row mt-4">
+        <div class="col-md-3 mb-4">
+            <div class="card card-hover p-3 text-center">
+                <div class="card-icon"><i class="fas fa-hashtag"></i></div>
+                <h5>ID</h5>
+                <p th:text="${tarea.id}"></p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card card-hover p-3 text-center">
+                <div class="card-icon"><i class="fas fa-tasks"></i></div>
+                <h5>Título</h5>
+                <p th:text="${tarea.titulo}"></p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card card-hover p-3 text-center">
+                <div class="card-icon"><i class="fas fa-users"></i></div>
+                <h5>Equipo</h5>
+                <p th:text="${tarea.equipo}"></p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card card-hover p-3 text-center">
+                <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                <h5>Fecha</h5>
+                <p th:text="${tarea.fechaAsignacion}"></p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card card-hover p-3 text-center">
+                <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+                <h5>Estado</h5>
+                <p th:text="${tarea.estado}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 mt-4">
+        <p class="text-warning">
+            ¿Está seguro que desea eliminar este registro? <br>
+            Una vez eliminado, no se puede recuperar. Por favor confirme.
+        </p>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" value="" id="confirmDelete">
+            <label class="form-check-label" for="confirmDelete">
+                Confirmo la eliminación de esta tarea
+            </label>
+        </div>
+        <div class="d-flex justify-content-start align-items-center">
+            <form th:action="@{/tareas/delete}" method="post" class="me-2">
+                <input type="hidden" name="Id" th:value="${tarea.id}">
+                <button type="submit" class="btn btn-danger">Eliminar tarea</button>
+            </form>
+            <a th:href="@{/tareas}" class="btn btn-outline-secondary">Regresar</a>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos base para las tarjetas */
+        .card-hover {
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1.5rem; /* Se redujo el espaciado interno */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Línea de color a la izquierda */
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 6px;
+            background-color: #007bff;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        /* Efecto al pasar el cursor */
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para los íconos */
+        .card-icon {
+            font-size: 1.8rem; /* Se redujo el tamaño del ícono */
+            color: #007bff;
+            background-color: #f0f8ff;
+            border-radius: 50%;
+            padding: 10px; /* Se redujo el padding del ícono */
+            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Estilos para el texto */
+        .card-hover h5 {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px; /* Se redujo el margen */
+        }
+
+        .card-hover p {
+            color: #6c757d;
+            font-size: 0.9rem; /* Se redujo el tamaño del texto */
+            font-weight: 500;
+        }
+    </style>
+</div>
+</html>

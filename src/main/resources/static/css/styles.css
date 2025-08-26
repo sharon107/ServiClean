@@ -10969,7 +10969,9 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 .sb-topnav.navbar-light #sidebarToggle {
-  color: #212529;
+  /*color: #212529;*/
+  color: #050505;
+
 }
 
 .sb-sidenav {
@@ -11023,10 +11025,10 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(0, 0, 0, 0.25);
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(05, 05, 05, 0.5);
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
   color: rgba(255, 255, 255, 0.25);

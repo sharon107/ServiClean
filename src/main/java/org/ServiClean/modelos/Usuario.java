@@ -3,6 +3,9 @@ package org.ServiClean.modelos;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "Usuarios")
 public class Usuario {
@@ -30,6 +33,23 @@ public class Usuario {
     private Rol rol;
 
     private Boolean estado = true;
+
+    @ManyToMany
+    @JoinTable(
+            name = "usuarios_tareas",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "tarea_id")
+    )
+
+    private Set<Tarea> tareas = new HashSet<>();
+
+    public Set<Tarea> getTareas() {
+        return tareas;
+    }
+
+    public void setTareas(Set<Tarea> tareas) {
+        this.tareas = tareas;
+    }
 
     public Integer getId()
     { return id; }

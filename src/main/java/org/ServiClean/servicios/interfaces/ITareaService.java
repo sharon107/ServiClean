@@ -17,4 +17,6 @@ public interface ITareaService {
     Tarea crearOEditar(Tarea tarea);
 
     void eliminarPorId(Integer id);
+
+    List<Tarea> obtenerHistorial();
 }

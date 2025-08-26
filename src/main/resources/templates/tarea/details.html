@@ -1,0 +1,229 @@
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+<div layout:fragment="content">
+    <h1>Detalles de la tarea</h1>
+
+    <div class="row mt-4">
+        <!-- Tarjeta con efecto hover -->
+        <div class="col-md-3 mb-4">
+            <div class="card-hover">
+                <!-- Imagen inicial -->
+                <div class="slide slide1">
+                    <div class="icon">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                </div>
+                <!-- Datos que aparecen al hover -->
+                <div class="slide slide2">
+                    <div class="content">
+                        <h5>ID</h5>
+                        <p th:text="${tarea.id}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card-hover">
+                <div class="slide slide1">
+                    <div class="icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+                <div class="slide slide2">
+                    <div class="content">
+                        <h5>Título</h5>
+                        <p th:text="${tarea.titulo}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card-hover">
+                <div class="slide slide1">
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="slide slide2">
+                    <div class="content">
+                        <h5>Equipo</h5>
+                        <p th:text="${tarea.equipo}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card-hover">
+                <div class="slide slide1">
+                    <div class="icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <div class="slide slide2">
+                    <div class="content">
+                        <h5>Fecha de asignación</h5>
+                        <p th:text="${tarea.fechaAsignacion}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card-hover">
+                <div class="slide slide1">
+                    <div class="icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="slide slide2">
+                    <div class="content">
+                        <h5>Estado</h5>
+                        <p th:text="${tarea.estado}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a th:href="@{/tareas/edit/{id} (id=${tarea.id})}" class="btn edit-btn">Editar</a>
+        <a th:href="@{/tareas}" class="btn back-btn" style="margin-left:10px;">Regresar</a>
+    </div>
+
+    <style>
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        h1 {
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e6ed;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Tarjeta hover inversa */
+        .card-hover {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card-hover .slide {
+            width: 100%;
+            height: 100%;
+            transition: 0.5s;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Imagen visible inicialmente */
+        .card-hover .slide1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #2c73df;
+            z-index: 2;
+        }
+
+        /* Datos ocultos inicialmente */
+        .card-hover .slide2 {
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 1;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        /* Hover: mostrar datos y ocultar imagen */
+        .card-hover:hover .slide1 {
+            opacity: 0;
+            transform: scale(0.9);
+            z-index: 1;
+        }
+
+        .card-hover:hover .slide2 {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 2;
+        }
+
+        .card-hover .slide1 .icon {
+            font-size: 50px;
+            color: #fff;
+        }
+
+        .card-hover .slide2 h5 {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .card-hover .slide2 p {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .card-hover .slide2::after {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c73df;
+            border-radius: 2px;
+        }
+
+        /* Botones */
+        .btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .edit-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+        }
+
+        .edit-btn:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.25);
+        }
+
+        .back-btn {
+            background-color: #ffffff;
+            color: #7f8c8d;
+            border: 1px solid #ced4da;
+        }
+
+        .back-btn:hover {
+            background-color: #e9ecef;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</div>
+</html>

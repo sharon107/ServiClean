@@ -1,114 +1,722 @@
 <!DOCTYPE html>
 <html lang="es"
-    xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Servicio de limpieza</title>
+    <title>Proyecto - Sistema de mantenimiento</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetaler211"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --background-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --background-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --text-color: #2d3748;
+            --text-light: #4a5568;
+            --muted-text-color: #718096;
+            --border-color: rgba(255, 255, 255, 0.3);
+
+            --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --blur-effect: blur(8px);
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Navbar Glass Effect */
+        .sb-topnav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: var(--blur-effect);
+            -webkit-backdrop-filter: var(--blur-effect);
+            border: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-glass);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            transition: all 0.3s ease;
+        }
+
+        .sb-topnav .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .sb-topnav .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        .sb-topnav .form-control {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: var(--blur-effect);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sb-topnav .form-control:focus {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .sb-topnav .btn-light {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .sb-topnav .btn-light:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Glassmorphism Sidebar */
+        .sb-sidenav {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: var(--blur-effect);
+            -webkit-backdrop-filter: var(--blur-effect);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-glass);
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 1020;
+            padding-top: 80px;
+        }
+
+        .sb-sidenav .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            margin: 0.25rem 1rem;
+            padding: 0.875rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sb-sidenav .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .sb-sidenav .nav-link:hover {
+            color: white;
+            background: transparent;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .sb-sidenav .nav-link:hover::before {
+            left: 0;
+        }
+
+        .sb-sidenav .nav-link.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .sb-sidenav .sb-sidenav-menu-heading {
+            color: var(--muted-text-color);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 1rem 2rem 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .sb-nav-link-icon i {
+            color: var(--muted-text-color);
+            margin-right: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sb-sidenav .nav-link:hover .sb-nav-link-icon i,
+        .sb-sidenav .nav-link.active .sb-nav-link-icon i {
+            color: black;
+            transform: scale(1.1);
+        }
+
+        .sb-sidenav-menu-nested a {
+            padding-left: 3rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .sb-sidenav .sb-sidenav-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: var(--blur-effect);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 1rem;
+        }
+
+        /* Main Content */
+        #layoutSidenav_content {
+            margin-left: 280px;
+            background: transparent;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: var(--blur-effect);
+            -webkit-backdrop-filter: var(--blur-effect);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-card);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card .card-header {
+            background: transparent;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* Enhanced Card Icons */
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+        }
+
+        .card-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            opacity: 0.1;
+            border-radius: 50%;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-icon::after {
+            width: 100px;
+            height: 100px;
+            opacity: 0.2;
+        }
+
+        /* Modern Buttons */
+        .btn {
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-hover {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-hover:hover::before {
+            left: 100%;
+        }
+
+        .btn-hover:active {
+            transform: translateY(0);
+        }
+
+        /* Enhanced Tables */
+        table {
+            background: var(--card-bg);
+            backdrop-filter: var(--blur-effect);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-color);
+        }
+
+        table thead th {
+            font-weight: 600;
+            color: var(--text-color);
+            background: var(--primary-gradient);
+            color: white;
+            position: relative;
+        }
+
+        table tbody tr {
+            transition: all 0.2s ease;
+            backdrop-filter: var(--blur-effect);
+        }
+
+        table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.01);
+        }
+
+        /* Glass Footer */
+        footer {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: var(--blur-effect);
+            -webkit-backdrop-filter: var(--blur-effect);
+            color: var(--text-light);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+            margin-left: -280px;
+            padding-left: 280px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .sb-sidenav {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sb-sidenav.active {
+                transform: translateX(0);
+            }
+
+            #layoutSidenav_content {
+                margin-left: 0;
+            }
+
+            footer {
+                margin-left: 0;
+                padding-left: 1rem;
+            }
+        }
+
+        /* Animated background elements */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .floating-shapes::before,
+        .floating-shapes::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-shapes::before {
+            width: 200px;
+            height: 200px;
+            background: var(--primary-gradient);
+            opacity: 0.1;
+            top: 10%;
+            left: 10%;
+            animation-delay: -2s;
+        }
+
+        .floating-shapes::after {
+            width: 150px;
+            height: 150px;
+            background: var(--secondary-gradient);
+            opacity: 0.1;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* Dropdown improvements */
+        .dropdown-menu {
+            background: var(--card-bg);
+            backdrop-filter: var(--blur-effect);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-glass);
+        }
+
+        .dropdown-item {
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Sidebar toggle button */
+        #sidebarToggle {
+            color: var(--primary-color);
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarToggle:hover {
+            color: var(--secondary-color);
+            transform: rotate(180deg);
+        }
+
+        /* Content animations */
+        .container-fluid {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <!-- Navbar Brand-->
+<div class="floating-shapes"></div>
+
+<nav class="sb-topnav navbar navbar-expand navbar-dark">
     <a class="navbar-brand ps-3" href="#">Proyecto</a>
-    <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-    <!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        <div class="input-group">
-            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-        </div>
-    </form>
-    <!-- Navbar-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+
+
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Activity Log</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#">Logout</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-chart-line me-2"></i>Activity Log</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
         </li>
     </ul>
 </nav>
+
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Mantenimientos</div>
-                    <a class="nav-link" href="">
+                    <div class="sb-sidenav-menu-heading">CORE</div>
+                    <a class="nav-link active" href="#">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Dashboard
                     </a>
-                    <a class="nav-link" th:href="@{/roles}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Rol
+
+                    <div class="sb-sidenav-menu-heading">Interface</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tools"></i></div>
+                        Mantenimientos
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" th:href="@{/roles}"><i class="fas fa-user-tag me-2"></i>Roles</a>
+                            <a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Usuarios</a>
+                            <a class="nav-link" href="#"><i class="fas fa-desktop me-2"></i>Equipos</a>
+                            <a class="nav-link" th:href="@{/tareas}"><i class="fas fa-tasks me-2"></i>Tareas</a>
+                        </nav>
+                    </div>
+
+                    <div class="sb-sidenav-menu-heading">Addons</div>
+                    <a class="nav-link" th:href="@{/historial-tarea}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-history"></i></div>
+                        Historial
                     </a>
                     <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Usuarios
-                    </a>
-                    <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Equipos
-                    </a>
-                    <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Tareas
-                    </a>
-                    <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Historial de tareas
-                    </a>
-                    <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Reportes
                     </a>
                     <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Auditoria
+                        <div class="sb-nav-link-icon"><i class="fas fa-clipboard-check"></i></div>
+                        Auditoría
                     </a>
-
                 </div>
-            </div>
-            <div class="sb-sidenav-footer">
-                <div class="small">Logged in as:</div>
-                Sistema de mantenimiento y lmpieza
             </div>
         </nav>
     </div>
+
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid px-4">
-                    <div layout:fragment="content">
-                        <p>Changing contents...</p>
+            <div class="container-fluid px-4 py-5" style="margin-left: 2rem;">
+                <div layout:fragment="content">
+                    <h2 class="mb-4 fw-bold" style="color: var(--text-color); margin-left: 1rem;">
+                        <i class="fas fa-tasks me-2" style="color: var(--primary-color);"></i>
+                        Lista de Tareas
+                    </h2>
+                    <div class="row mt-5" style="margin-left: 1rem; margin-right: 1rem;">
+                        <div class="col-md-4 mb-4">
+                            <div class="card text-center p-4">
+                                <div class="card-icon"><i class="fas fa-tasks"></i></div>
+                                <h5 class="fw-bold mb-3">Tareas</h5>
+                                <p class="text-muted">Visualiza y gestiona todas tus tareas de mantenimiento de forma eficiente.</p>
+                                <a href="#" class="btn btn-hover mt-2">
+                                    <i class="fas fa-arrow-right me-2"></i>Ver más
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card text-center p-4">
+                                <div class="card-icon"><i class="fas fa-users"></i></div>
+                                <h5 class="fw-bold mb-3">Usuarios</h5>
+                                <p class="text-muted">Administra usuarios, roles y permisos del sistema de manera centralizada.</p>
+                                <a href="#" class="btn btn-hover mt-2">
+                                    <i class="fas fa-arrow-right me-2"></i>Ver más
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card text-center p-4">
+                                <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                                <h5 class="fw-bold mb-3">Equipos</h5>
+                                <p class="text-muted">Gestiona todos los equipos y dispositivos que requieren mantenimiento.</p>
+                                <a href="#" class="btn btn-hover mt-2">
+                                    <i class="fas fa-arrow-right me-2"></i>Ver más
+                                </a>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Additional dashboard content -->
+                    <div class="row" style="margin-left: 1rem; margin-right: 1rem;">
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Resumen del Sistema</h5>
+                                    <small class="text-muted">Última actualización: hace 5 minutos</small>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        <div class="col-md-3">
+                                            <div class="p-3">
+                                                <h3 class="text-primary fw-bold">124</h3>
+                                                <p class="text-muted mb-0">Tareas Activas</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="p-3">
+                                                <h3 class="text-success fw-bold">89</h3>
+                                                <p class="text-muted mb-0">Completadas</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="p-3">
+                                                <h3 class="text-warning fw-bold">12</h3>
+                                                <p class="text-muted mb-0">Pendientes</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="p-3">
+                                                <h3 class="text-danger fw-bold">3</h3>
+                                                <p class="text-muted mb-0">Atrasadas</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Proyecto  Sistema de mantenimiento y limpieza</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
+
+        <footer class="py-4 mt-auto">
+            <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                    <i class="fas fa-copyright me-1"></i>2025 Proyecto - Sistema de mantenimiento
+                </div>
+                <div>
+                    <a href="#" class="text-decoration-none me-3">
+                        <i class="fas fa-shield-alt me-1"></i>Privacy Policy
+                    </a>
+                    <a href="#" class="text-decoration-none">
+                        <i class="fas fa-file-contract me-1"></i>Terms & Conditions
+                    </a>
                 </div>
             </div>
         </footer>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/scripts.js}"></script>
+
+<script>
+    // Sidebar toggle functionality
+    document.getElementById('sidebarToggle').addEventListener('click', function() {
+        const sidebar = document.querySelector('.sb-sidenav');
+        sidebar.classList.toggle('active');
+    });
+
+    // Enhanced card hover effects
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>

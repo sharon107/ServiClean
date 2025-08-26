@@ -1,0 +1,258 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+
+  <!-- Alertas de éxito y error -->
+  <div th:if="${msg != null}">
+    <script>
+      Swal.fire({ title: "Confirmación", text: '[[${msg}]]', icon: "success" });
+    </script>
+  </div>
+  <div th:if="${error != null}">
+    <script>
+      Swal.fire({ title: "Error", text: '[[${error}]]', icon: "error" });
+    </script>
+  </div>
+
+  <h1>Lista de tareas</h1>
+
+  <div class="row">
+    <!-- Contenedor de tareas -->
+    <div class="col-md-9 d-flex flex-wrap justify-content-start">
+      <div th:each="item, iterStat : ${tareas}" class="task-wrapper"
+           th:style="'animation-delay: '+(${iterStat.index}*0.1)+'s;'">
+
+        <div class="card task-card"
+             th:data-id="${item.id}"
+             th:data-title="${item.titulo}">
+          <!-- Imagen superior -->
+          <div class="image">
+            <img src="https://i.pinimg.com/originals/a4/7b/a5/a47ba59b4a353e0928ef0551ca44f980.jpg" alt="Imagen tarea">
+          </div>
+
+          <!-- Contenido que aparece al hover -->
+          <div class="content">
+            <h5 th:text="${#strings.substring(item.titulo, 0, T(java.lang.Math).min(25, item.titulo.length())) + (item.titulo.length() > 25 ? '...' : '')}">
+              Título
+            </h5>
+            <p><strong>ID:</strong> <span th:text="${item.id}">1</span></p>
+            <p><strong>Estado:</strong> <span th:text="${item.estado}">Pendiente</span></p>
+            <p><strong>Fecha Asignación:</strong> <span th:text="${item.fechaAsignacion}">2025-08-20</span></p>
+            <p><strong>Equipo:</strong> <span th:text="${item.equipo != null ? item.equipo.nombre : 'Sin equipo'}">Equipo</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar con botones -->
+    <div class="col-md-3">
+      <div class="card card-sidebar mb-3">
+        <div class="card-body text-center">
+          <a th:href="@{/tareas/create}" class="btn btn-primary btn-sidebar w-100">Nueva Tarea</a>
+        </div>
+      </div>
+
+      <div class="card card-sidebar mb-3">
+        <div class="card-header text-center">Acciones</div>
+        <div class="card-body text-center">
+          <p id="selectedTask" class="text-muted-task">Selecciona una tarea</p>
+          <a id="detailsBtn" class="btn btn-primary btn-sidebar w-100 mb-2 disabled">Ver Detalles</a>
+          <a id="editBtn" class="btn btn-info btn-sidebar w-100 mb-2 disabled">Editar</a>
+          <a id="deleteBtn" class="btn btn-danger btn-sidebar w-100 disabled">Eliminar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Estilos adaptados -->
+  <style>
+    /* === TARJETAS DE TAREAS === */
+    .task-wrapper {
+      margin: 15px;
+      animation: fadeIn 0.8s ease forwards;
+      opacity: 0;
+    }
+
+    .task-card {
+      position: relative;
+      max-width: 260px;
+      height: 300px;
+      background: #fff;
+      margin: 20px 10px;
+      padding: 15px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      transition: 0.3s ease-in-out;
+      overflow: hidden;
+    }
+
+    .task-card:hover {
+      height: 320px;
+    }
+
+    .task-card .image {
+      position: relative;
+      width: 240px;
+      height: 160px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      overflow: hidden;
+      z-index: 1;
+      transition: transform 0.3s ease;
+    }
+
+    .task-card .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .task-card:hover .image img {
+      transform: scale(1.05);
+    }
+
+    .task-card .content {
+      position: relative;
+      top: 10px;
+      text-align: center;
+      padding: 8px;
+      color: #111;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.3s ease-in-out;
+    }
+
+    .task-card:hover .content {
+      margin-top: 10px;
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 0.1s;
+    }
+
+    .task-card h5 {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #000;
+      font-size: 1.1rem;
+    }
+
+    .task-card p {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: #444;
+    }
+
+    .task-card.selected {
+      border: 2px solid #6c63ff;
+      box-shadow: 0 8px 30px rgba(108, 99, 255, 0.25);
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* === BOTONES SIDEBAR – ESTILO GUMMY === */
+    .btn-sidebar {
+      position: relative;
+      padding: 10px;
+      color: #000;
+      border: 3px solid transparent;
+      border-radius: 16px;
+      font-family: "Sour Gummy", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      background-color: #4f5;
+      transition: all linear 0.2s;
+      margin-bottom: 8px;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .btn-sidebar:hover {
+      transform: scale(1.05);
+      border-radius: 10px;
+      animation: 0.5s linear gummy-btn-hover;
+      cursor: pointer;
+    }
+
+    .btn-sidebar:active {
+      transform: scale(0.9);
+      border-radius: 20px;
+      animation: 0.2s linear gummy-btn-press;
+    }
+
+    .btn-sidebar:before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      right: 12px;
+      width: 70%;
+      height: 4px;
+      background-color: #fff;
+      border-radius: 8px;
+    }
+
+    /* Colores de botones */
+    .btn-primary { background-color: #3df; border-color: #57c; }
+    .btn-info { background-color: #fad; border-color: #d7b; }
+    .btn-danger { background-color: #f46; border-color: #a24; }
+    .btn-success { background-color: #4f5; border-color: #0a0; }
+
+    @keyframes gummy-btn-hover {
+      40% { transform: scale(1.05); border-radius: 10px; }
+      70% { transform: scale(1.05); border-radius: 16px; }
+      100% { transform: scale(1.05); border-radius: 10px; }
+    }
+
+    @keyframes gummy-btn-press {
+      75% { transform: scale(0.85); border-radius: 32px; }
+      100% { transform: scale(0.9); border-radius: 20px; }
+    }
+  </style>
+
+
+  <!-- Script para selección de tarjetas -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let selectedId = null;
+      const cards = document.querySelectorAll(".task-card");
+      const selectedTaskLabel = document.getElementById("selectedTask");
+      const detailsBtn = document.getElementById("detailsBtn");
+      const editBtn = document.getElementById("editBtn");
+      const deleteBtn = document.getElementById("deleteBtn");
+
+      cards.forEach(card => {
+        card.addEventListener("click", () => {
+          cards.forEach(c => c.classList.remove("selected"));
+          card.classList.add("selected");
+
+          selectedId = card.dataset.id;
+          const title = card.dataset.title;
+
+          selectedTaskLabel.textContent = title;
+          detailsBtn.href = `/tareas/details/${selectedId}`;
+          editBtn.href = `/tareas/edit/${selectedId}`;
+          deleteBtn.href = `/tareas/remove/${selectedId}`;
+
+          [detailsBtn, editBtn, deleteBtn].forEach(btn => {
+            btn.classList.remove("disabled");
+          });
+        });
+      });
+    });
+  </script>
+</div>
+</html>
