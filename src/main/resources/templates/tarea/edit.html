@@ -1,0 +1,128 @@
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <!-- Encabezado -->
+                <div class="page-header mb-5">
+                    <h1 class="main-title text-primary">
+                        <i class="fas fa-edit me-3"></i>
+                        Editar Tarea
+                    </h1>
+                    <div class="title-underline bg-primary"></div>
+                    <p class="page-subtitle text-primary">Modifica los datos de la tarea seleccionada</p>
+                </div>
+
+                <!-- Formulario de edición -->
+                <div class="modern-card form-card">
+                    <div class="card-glow"></div>
+                    <form th:action="@{/tareas/update}" th:object="${tarea}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <i class="fas fa-tasks detail-icon"></i>
+                                    <h5>Título</h5>
+                                    <input type="text" th:field="*{titulo}" class="form-control editable" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <i class="fas fa-users detail-icon"></i>
+                                    <h5>Equipo</h5>
+                                    <input type="text" th:field="*{equipo}" class="form-control editable">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <i class="fas fa-calendar-alt detail-icon"></i>
+                                    <h5>Fecha Asignación</h5>
+                                    <input type="date" th:field="*{fechaAsignacion}" class="form-control editable" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <i class="fas fa-check-circle detail-icon"></i>
+                                    <h5>Estado</h5>
+                                    <select th:field="*{estado}" class="form-control editable" required>
+                                        <option value="Pendiente">Pendiente</option>
+                                        <option value="En progreso">En progreso</option>
+                                        <option value="Completada">Completada</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="detail-card">
+                                    <i class="fas fa-align-left detail-icon"></i>
+                                    <h5>Descripción</h5>
+                                    <textarea th:field="*{descripcion}" class="form-control editable" rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-divider"></div>
+
+                        <!-- Botones -->
+                        <div class="action-buttons d-flex gap-2">
+                            <button type="submit" class="btn-modern btn-primary-modern">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                            <a th:href="@{/tareas}" class="btn-modern btn-secondary-modern">
+                                <i class="fas fa-arrow-left me-2"></i>Regresar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Estilos -->
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        * { font-family: 'Poppins', sans-serif; }
+
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+
+        .page-header { text-align: center; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .title-underline { width: 100px; height: 4px; margin: 0 auto 1.5rem; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; background: var(--primary-gradient); }
+        .page-subtitle { color: #3498db; font-size: 1.1rem; font-weight: 500; }
+
+        .modern-card { background: rgba(255,255,255,0.95); border-radius: 25px; padding: 2.5rem; box-shadow: var(--card-shadow); animation: fadeInUp 0.8s ease forwards; position: relative; }
+        .modern-card:hover { box-shadow: var(--hover-shadow); }
+        .card-glow { display: none; } /* quitamos glow para no bloquear campos */
+
+        .detail-card { background: #f9f9f9; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .detail-icon { font-size: 1.8rem; color: #3498db; margin-bottom: 10px; }
+        .detail-card h5 { font-weight: 600; margin-bottom: 5px; color: #2c3e50; }
+        .form-control.editable { background: #fff !important; pointer-events: auto; }
+
+        .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem; text-transform: uppercase; min-width: 150px; cursor: pointer; position: relative; overflow: hidden; transition: all 0.3s ease; text-decoration: none; }
+        .btn-primary-modern { background: var(--primary-gradient); color: white; border: none; }
+        .btn-primary-modern:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,172,254,0.4); }
+        .btn-secondary-modern { background: rgba(108,117,125,0.1); color: #6c757d; border: 2px solid rgba(108,117,125,0.2); }
+        .btn-secondary-modern:hover { background: rgba(108,117,125,0.2); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(108,117,125,0.2); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes expandWidth { from { width: 0; } to { width: 100px; } }
+    </style>
+</div>
+</html>

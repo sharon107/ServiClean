@@ -1,0 +1,244 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+
+    <!-- Alertas de éxito y error -->
+    <div th:if="${msg != null}">
+        <script>
+            Swal.fire({ title: "Confirmación", text: '[[${msg}]]', icon: "success" });
+        </script>
+    </div>
+    <div th:if="${error != null}">
+        <script>
+            Swal.fire({ title: "Error", text: '[[${error}]]', icon: "error" });
+        </script>
+    </div>
+
+    <!-- Título principal con animación -->
+    <div class="page-header mb-4">
+        <h1 class="main-title">
+            <i class="fas fa-tasks me-3"></i>
+            Lista de Tareas
+        </h1>
+        <div class="title-underline"></div>
+    </div>
+
+    <div class="row">
+        <!-- Contenedor de tareas -->
+        <div class="col-md-9 d-flex flex-wrap justify-content-start">
+            <div th:each="item, iterStat : ${tareas}" class="task-wrapper"
+                 th:style="'animation-delay: '+(${iterStat.index}*0.1)+'s;'">
+
+                <div class="card task-card"
+                     th:data-id="${item.id}"
+                     th:data-title="${item.titulo}">
+                    <!-- Imagen superior -->
+                    <div class="image">
+                        <img src="https://i.pinimg.com/originals/a4/7b/a5/a47ba59b4a353e0928ef0551ca44f980.jpg" alt="Imagen tarea">
+                        <div class="image-overlay">
+                            <i class="fas fa-eye overlay-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Contenido que aparece al hover -->
+                    <div class="content">
+                        <h5 th:text="${#strings.substring(item.titulo, 0, T(java.lang.Math).min(25, item.titulo.length())) + (item.titulo.length() > 25 ? '...' : '')}">
+                            Título
+                        </h5>
+                        <div class="task-details">
+                            <div class="detail-item">
+                                <i class="fas fa-hashtag"></i>
+                                <span>ID: <strong th:text="${item.id}">1</strong></span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-flag"></i>
+                                <span>Estado: <strong th:text="${item.estado}">Pendiente</strong></span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>Fecha: <strong th:text="${item.fechaAsignacion}">2025-08-20</strong></span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-tools"></i>
+                                <span>Equipo: <strong th:text="${item.equipo != null ? item.equipo.nombre : 'Sin equipo'}">Equipo</strong></span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-align-left"></i>
+                                <span>Descripción: <strong th:text="${item.descripcion != null ? item.descripcion : 'Sin descripción'}">Descripción</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar con botones -->
+        <div class="col-md-3">
+            <!-- Nueva Tarea -->
+            <div class="sidebar-card new-task-card mb-4">
+                <div class="card-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="card-content">
+                    <h5>Nueva Tarea</h5>
+                    <p>Crear una nueva tarea de mantenimiento</p>
+                    <a th:href="@{/tareas/create}" class="btn-modern btn-primary-modern">
+                        <i class="fas fa-plus me-2"></i>Crear Tarea
+                    </a>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="sidebar-card actions-card">
+                <div class="card-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="card-content">
+                    <h5>Acciones</h5>
+                    <div class="selected-task-info">
+                        <i class="fas fa-mouse-pointer me-2"></i>
+                        <span id="selectedTask" class="task-name">Selecciona una tarea</span>
+                    </div>
+
+                    <div class="action-buttons">
+                        <a id="detailsBtn" class="btn-modern btn-info-modern disabled">
+                            <i class="fas fa-eye me-2"></i>Ver Detalles
+                        </a>
+                        <a id="editBtn" class="btn-modern btn-warning-modern disabled">
+                            <i class="fas fa-edit me-2"></i>Editar
+                        </a>
+                        <a id="deleteBtn" class="btn-modern btn-danger-modern disabled">
+                            <i class="fas fa-trash me-2"></i>Eliminar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos completos -->
+    <style>
+        * { font-family: 'Poppins', sans-serif; }
+
+        /* Título principal */
+        .page-header { text-align: center; margin-bottom: 3rem; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .title-underline { width: 100px; height: 4px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0 auto; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; }
+
+        /* Tarjetas de tareas */
+        .task-wrapper { margin: 15px; animation: fadeInUp 0.8s ease forwards; opacity: 0; }
+        .task-card {
+            position: relative;
+            max-width: 280px;
+            height: 240px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            margin: 20px 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .task-card:hover { height: 440px; max-width: 300px; transform: translateY(-10px); box-shadow: 0 25px 60px rgba(0,0,0,0.2); }
+        .task-card .content { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.5s ease; text-align: center; padding: 10px 0; }
+        .task-card:hover .content { max-height: 300px; opacity: 1; margin-top: 15px; }
+
+        .task-card .image { position: relative; width: 250px; height: 180px; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .task-card .image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .task-card:hover .image img { transform: scale(1.1); }
+        .image-overlay { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(102,126,234,0.3); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.3s ease; }
+        .task-card:hover .image-overlay { opacity:1; }
+        .overlay-icon { color:white; font-size:2rem; animation:pulse 2s infinite; }
+
+        .task-details { text-align: left; }
+        .detail-item { display:flex; align-items:center; margin-bottom:8px; font-size:0.9rem; color:#555; }
+        .detail-item i { width:20px; margin-right:10px; color:#667eea; }
+
+        .task-card.selected { border:3px solid #667eea; box-shadow:0 15px 50px rgba(102,126,234,0.3); transform:translateY(-5px) scale(1.02); }
+
+        /* Sidebar cards */
+        .sidebar-card { position:relative; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius:25px; padding:2rem; box-shadow:0 15px 35px rgba(0,0,0,0.1); border:1px solid rgba(255,255,255,0.2); transition:all 0.4s cubic-bezier(0.4,0,0.2,1); overflow:hidden; animation:fadeInRight 0.8s ease forwards; }
+        .sidebar-card:hover { transform:translateY(-8px); box-shadow:0 25px 50px rgba(0,0,0,0.2); }
+        .sidebar-card .card-icon { position:absolute; top:-10px; right:-10px; width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; opacity:0.1; transition:all 0.3s ease; }
+        .new-task-card .card-icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color:white; }
+        .actions-card .card-icon { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color:white; }
+        .sidebar-card:hover .card-icon { opacity:0.2; transform:scale(1.1); }
+
+        .card-content h5 { font-size:1.4rem; font-weight:700; margin-bottom:0.8rem; background:linear-gradient(135deg, #667eea 0%,#764ba2 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .card-content p { color:#6c757d; margin-bottom:1.5rem; font-size:0.95rem; }
+        .selected-task-info { background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%); padding:1rem; border-radius:15px; margin-bottom:1.5rem; border:2px solid rgba(102,126,234,0.1); }
+        .task-name { font-weight:600; color:#2c3e50; }
+        .action-buttons { display:flex; flex-direction:column; gap:0.8rem; }
+
+        /* Botones modernos */
+        .btn-modern { display:flex; align-items:center; justify-content:center; padding:0.8rem 1.5rem; border:none; border-radius:50px; font-weight:600; font-size:0.95rem; text-decoration:none; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); position:relative; overflow:hidden; text-transform:uppercase; letter-spacing:0.5px; }
+        .btn-modern::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition:left 0.5s; }
+        .btn-modern:hover::before { left:100%; }
+        .btn-primary-modern { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color:white; box-shadow:0 4px 15px rgba(79,172,254,0.3); }
+        .btn-info-modern { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; box-shadow:0 4px 15px rgba(102,126,234,0.3); }
+        .btn-warning-modern { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color:white; box-shadow:0 4px 15px rgba(240,147,251,0.3); }
+        .btn-danger-modern { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color:white; box-shadow:0 4px 15px rgba(250,112,154,0.3); }
+        .btn-modern.disabled { opacity:0.5; cursor:not-allowed; pointer-events:none; transform:none !important; }
+
+        .card-glow { position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px; background:linear-gradient(135deg,#667eea,#764ba2,#4facfe,#00f2fe); border-radius:25px; opacity:0; z-index:-1; transition:opacity 0.3s ease; }
+        .sidebar-card:hover .card-glow { opacity:0.1; animation:rotate 3s linear infinite; }
+
+        /* Animaciones */
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(30px);} to { opacity:1; transform:translateY(0);} }
+        @keyframes fadeInRight { from { opacity:0; transform:translateX(30px);} to { opacity:1; transform:translateX(0);} }
+        @keyframes slideInDown { from { opacity:0; transform:translateY(-30px);} to { opacity:1; transform:translateY(0);} }
+        @keyframes expandWidth { from {width:0;} to {width:100px;} }
+        @keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.1); } }
+        @keyframes rotate { 0% { transform:rotate(0deg);} 100% { transform:rotate(360deg);} }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title { font-size: 2rem; }
+            .task-card { max-width:100%; margin:10px 0; }
+            .sidebar-card { margin-bottom:2rem; }
+        }
+    </style>
+
+    <!-- Script para selección de tarjetas -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectedId = null;
+            const cards = document.querySelectorAll(".task-card");
+            const selectedTaskLabel = document.getElementById("selectedTask");
+            const detailsBtn = document.getElementById("detailsBtn");
+            const editBtn = document.getElementById("editBtn");
+            const deleteBtn = document.getElementById("deleteBtn");
+
+            cards.forEach(card => {
+                card.addEventListener("click", () => {
+                    cards.forEach(c => c.classList.remove("selected"));
+                    card.classList.add("selected");
+
+                    selectedId = card.dataset.id;
+                    const title = card.dataset.title;
+
+                    selectedTaskLabel.textContent = title.length>25?title.substring(0,25)+'...':title;
+                    detailsBtn.href = `/tareas/details/${selectedId}`;
+                    editBtn.href = `/tareas/edit/${selectedId}`;
+                    deleteBtn.href = `/tareas/remove/${selectedId}`;
+                    [detailsBtn, editBtn, deleteBtn].forEach(btn => btn.classList.remove("disabled"));
+                });
+            });
+        });
+    </script>
+</div>
+</html>

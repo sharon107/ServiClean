@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es"
-    xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -12,112 +13,419 @@
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetaler211"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-bg: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --hover-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-navbar {
+            background: var(--primary-gradient) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            border: none;
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        /* Horizontal Menu */
+        .horizontal-menu {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 0;
+            border-top: 3px solid transparent;
+            border-image: var(--primary-gradient) 1;
+        }
+
+        .horizontal-menu .nav-link {
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 1.2rem 1.5rem;
+            margin: 0 0.2rem;
+            border-radius: 8px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .horizontal-menu .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+
+        .horizontal-menu .nav-link:hover::before {
+            left: 0;
+        }
+
+        .horizontal-menu .nav-link:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .horizontal-menu .nav-link i {
+            margin-right: 0.7rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .horizontal-menu .nav-link:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .content-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 2rem;
+            margin: 1rem 0;
+            transition: all 0.4s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        /* User Dropdown */
+        .user-dropdown .dropdown-toggle {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .user-dropdown .dropdown-menu {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.95);
+        }
+
+        .user-dropdown .dropdown-item {
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            margin: 0.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-item:hover {
+            background: var(--primary-gradient);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Search Bar */
+        .search-container .form-control {
+            border: none;
+            border-radius: 25px;
+            padding: 0.7rem 1.5rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-container .form-control::placeholder {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .search-container .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .search-container .btn {
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.7rem 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-container .btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        .custom-footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .custom-footer a {
+            color: #64b5f6;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .custom-footer a:hover {
+            color: #42a5f5;
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .horizontal-menu {
+                padding: 1rem 0;
+            }
+
+            .horizontal-menu .nav-link {
+                padding: 0.8rem 1rem;
+                margin: 0.1rem;
+                font-size: 0.9rem;
+            }
+
+            .content-card {
+                margin: 0.5rem 0;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animation Classes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* Admin Section Styling */
+        .admin-section {
+            border-left: 4px solid transparent;
+            border-image: var(--secondary-gradient) 1;
+            padding-left: 1rem;
+        }
+
+        .menu-heading {
+            color: #7b68ee;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+        }
+    </style>
 </head>
 <body>
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="#">Proyecto</a>
-    <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-    <!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        <div class="input-group">
-            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+<!-- Top Navigation -->
+<nav class="navbar navbar-expand-lg top-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-broom me-2"></i>
+            Sistema de Mantenimiento y Limpieza
+        </a>
+
+        <!-- Search Bar -->
+        <div class="search-container d-none d-md-flex ms-auto me-3">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Buscar..." aria-label="Buscar...">
+                <button class="btn" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
         </div>
-    </form>
-    <!-- Navbar-->
-    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <div sec:authorize="isAnonymous()">
-                    <li><a class="dropdown-item" th:href="@{/login}">Login</a></li>
-                </div>
-                <li><hr class="dropdown-divider" /></li>
-                <div sec:authorize="isAuthenticated()">
-                    <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
-                </div>
-            </ul>
-        </li>
-    </ul>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown">
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-user me-2"></i>
+                    <span sec:authorize="isAuthenticated()" sec:authentication="name">Usuario</span>
+                    <span sec:authorize="isAnonymous()">Invitado</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <div sec:authorize="isAnonymous()">
+                        <li><a class="dropdown-item" th:href="@{/login}">
+                            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                        </a></li>
+                    </div>
+                    <li><hr class="dropdown-divider" /></li>
+                    <div sec:authorize="isAuthenticated()">
+                        <li><a class="dropdown-item" th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                        </a></li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
 </nav>
-<div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Mantenimientos</div>
-                    <div sec:authorize="hasAnyAuthority('admin')">
+
+<!-- Horizontal Menu -->
+<nav class="horizontal-menu">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div sec:authorize="hasAnyAuthority('admin')" class="admin-section">
+                    <div class="menu-heading">
+                        <i class="fas fa-cogs me-2"></i>Panel de Administración
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-center justify-content-lg-start">
                         <a class="nav-link" href="">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
+                            <i class="fas fa-tachometer-alt"></i>Dashboard
                         </a>
                         <a class="nav-link" th:href="@{/roles}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Rol
+                            <i class="fas fa-user-shield"></i>Roles
                         </a>
                         <a class="nav-link" th:href="@{/usuarios}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Usuarios
+                            <i class="fas fa-users"></i>Usuarios
                         </a>
                         <a class="nav-link" th:href="@{/equipos}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Equipos
+                            <i class="fas fa-tools"></i>Equipos
                         </a>
                         <a class="nav-link" th:href="@{/reportes}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Reportes
+                            <i class="fas fa-chart-bar"></i>Reportes
                         </a>
                         <a class="nav-link" th:href="@{/auditorias}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Auditoria
+                            <i class="fas fa-search-plus"></i>Auditorías
                         </a>
-                    </div>
-                    <div sec:authorize="hasAnyAuthority('admin', 'Tecnico')">
-                        <a class="nav-link" href="#">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Tareas
-                        </a>
-                        <a class="nav-link" href="#">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Historial de tareas
+                        <a class="nav-link" th:href="@{/tareas}">
+                            <i class="fas fa-tasks"></i>Tareas
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="sb-sidenav-footer">
-                <div sec:authorize="isAuthenticated()" class="small">
-                    Haz iniciado con el correo:
-                    <span class="text-light" sec:authentication="name"></span>
-                </div>
-                Sistema de mantenimiento y lmpieza
-            </div>
-        </nav>
+        </div>
     </div>
-    <div id="layoutSidenav_content">
-        <main>
-            <div class="container-fluid px-4">
-                    <div layout:fragment="content">
-                        <p>Changing contents...</p>
-                    </div>
-            </div>
-        </main>
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Proyecto  Sistema de mantenimiento y limpieza</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container-fluid px-4">
+        <div class="content-card fade-in-up">
+            <div layout:fragment="content">
+                <div class="text-center py-5">
+                    <i class="fas fa-broom fa-3x text-muted mb-3"></i>
+                    <h3 class="text-muted">Sistema de Mantenimiento y Limpieza</h3>
+                    <p class="text-muted">Selecciona una opción del menú para comenzar</p>
                 </div>
             </div>
-        </footer>
+        </div>
     </div>
-</div>
+</main>
+
+<!-- Footer -->
+<footer class="custom-footer mt-auto">
+    <div class="container-fluid px-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="small">
+                    <i class="fas fa-copyright me-1"></i>
+                    Copyright &copy; 2025 Sistema de Mantenimiento y Limpieza
+                </div>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="small">
+                    <a href="#"><i class="fas fa-shield-alt me-1"></i>Política de Privacidad</a>
+                    <span class="mx-2">&middot;</span>
+                    <a href="#"><i class="fas fa-file-contract me-1"></i>Términos y Condiciones</a>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3" sec:authorize="isAuthenticated()">
+            <div class="col-12 text-center">
+                <div class="small text-light">
+                    <i class="fas fa-user-circle me-2"></i>
+                    Sesión iniciada como: <span class="fw-bold" sec:authentication="name"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script th:src="@{/js/scripts.js}"></script>
+
+<script>
+    // Add smooth animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add hover effects to menu items
+        const menuLinks = document.querySelectorAll('.nav-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add loading animation to content
+        const contentCard = document.querySelector('.content-card');
+        if (contentCard) {
+            contentCard.style.opacity = '0';
+            contentCard.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                contentCard.style.transition = 'all 0.6s ease';
+                contentCard.style.opacity = '1';
+                contentCard.style.transform = 'translateY(0)';
+            }, 100);
+        }
+    });
+</script>
 </body>
 </html>

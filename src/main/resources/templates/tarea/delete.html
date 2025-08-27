@@ -1,0 +1,150 @@
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+
+        <!-- Encabezado con animación -->
+        <div class="page-header mb-5">
+          <h1 class="main-title text-danger">
+            <i class="fas fa-trash-alt me-3"></i>
+            Eliminar Tarea
+          </h1>
+          <div class="title-underline bg-danger"></div>
+          <p class="page-subtitle text-danger">Confirme si desea eliminar esta tarea de manera permanente</p>
+        </div>
+
+        <!-- Tarjeta de detalles -->
+        <div class="modern-card form-card">
+          <div class="card-glow"></div>
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <div class="detail-card">
+                <i class="fas fa-hashtag detail-icon"></i>
+                <h5>ID</h5>
+                <p th:text="${tarea.id}"></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="detail-card">
+                <i class="fas fa-tasks detail-icon"></i>
+                <h5>Título</h5>
+                <p th:text="${tarea.titulo}"></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="detail-card">
+                <i class="fas fa-users detail-icon"></i>
+                <h5>Equipo</h5>
+                <p th:text="${tarea.equipo}"></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="detail-card">
+                <i class="fas fa-calendar-alt detail-icon"></i>
+                <h5>Fecha</h5>
+                <p th:text="${tarea.fechaAsignacion}"></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="detail-card">
+                <i class="fas fa-check-circle detail-icon"></i>
+                <h5>Estado</h5>
+                <p th:text="${tarea.estado}"></p>
+              </div>
+            </div>
+            <!-- NUEVO CAMPO DESCRIPCIÓN -->
+            <div class="col-12">
+              <div class="detail-card">
+                <i class="fas fa-align-left detail-icon"></i>
+                <h5>Descripción</h5>
+                <p th:text="${tarea.descripcion != null ? tarea.descripcion : 'Sin descripción'}"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <!-- Mensaje de advertencia -->
+          <p class="text-warning mb-3">
+            Esta acción es irreversible. Confirme que desea eliminar la tarea seleccionada.
+          </p>
+
+          <!-- Checkbox de confirmación -->
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+            <label class="form-check-label" for="confirmDelete">
+              Confirmo la eliminación de esta tarea
+            </label>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="action-buttons d-flex gap-2">
+            <form th:action="@{/tareas/delete}" method="post" class="me-2">
+              <input type="hidden" name="Id" th:value="${tarea.id}">
+              <button type="submit" class="btn-modern btn-danger-modern">
+                <i class="fas fa-trash-alt me-2"></i>Eliminar
+              </button>
+            </form>
+            <a th:href="@{/tareas}" class="btn-modern btn-secondary-modern">
+              <i class="fas fa-arrow-left me-2"></i>Regresar
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Estilos adaptados -->
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+      --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    * { font-family: 'Poppins', sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    /* Encabezado */
+    .page-header { text-align: center; animation: slideInDown 0.8s ease; }
+    .main-title { font-size: 2.5rem; font-weight: 700; background: var(--danger-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .title-underline { width: 100px; height: 4px; margin: 0 auto 1.5rem; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; background: var(--danger-gradient); }
+    .page-subtitle { color: #e74c3c; font-size: 1.1rem; font-weight: 500; }
+
+    /* Tarjeta moderna */
+    .modern-card { background: rgba(255,255,255,0.95); border-radius: 25px; padding: 2.5rem; box-shadow: var(--card-shadow); animation: fadeInUp 0.8s ease forwards; position: relative; }
+    .modern-card:hover { box-shadow: var(--hover-shadow); }
+    .card-glow { position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: var(--danger-gradient); border-radius: 25px; opacity: 0; transition: opacity 0.3s ease; }
+    .modern-card:hover .card-glow { opacity: 0.1; }
+
+    /* Tarjetas de detalle */
+    .detail-card { background: #f9f9f9; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; }
+    .detail-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .detail-icon { font-size: 1.8rem; color: #ff4b2b; margin-bottom: 10px; }
+    .detail-card h5 { font-weight: 600; margin-bottom: 5px; color: #2c3e50; }
+    .detail-card p { color: #6c757d; font-size: 0.95rem; }
+
+    /* Botones */
+    .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem; text-transform: uppercase; min-width: 150px; cursor: pointer; position: relative; overflow: hidden; transition: all 0.3s ease; text-decoration: none; }
+    .btn-danger-modern { background: var(--danger-gradient); color: white; border: none; }
+    .btn-danger-modern:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,75,43,0.4); }
+    .btn-secondary-modern { background: rgba(108,117,125,0.1); color: #6c757d; border: 2px solid rgba(108,117,125,0.2); }
+    .btn-secondary-modern:hover { background: rgba(108,117,125,0.2); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(108,117,125,0.2); }
+
+    /* Animaciones */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes expandWidth { from { width: 0; } to { width: 100px; } }
+  </style>
+</div>
+</html>

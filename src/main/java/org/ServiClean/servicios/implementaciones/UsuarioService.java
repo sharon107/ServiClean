@@ -31,6 +31,7 @@ public class UsuarioService implements IUsuarioService {
         return usuarioRepository.findAll();
     }
 
+
     @Override
     public Optional<Usuario> buscarPorId(Integer id) {
         return usuarioRepository.findById(id);

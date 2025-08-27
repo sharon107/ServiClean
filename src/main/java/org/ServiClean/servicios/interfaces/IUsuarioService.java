@@ -12,6 +12,7 @@ public interface IUsuarioService {
 
     List<Usuario> obtenerTodos();
 
+
     Optional<Usuario> buscarPorId(Integer id);
 
     Usuario crearOEditar(Usuario usuario);
