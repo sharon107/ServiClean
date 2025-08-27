@@ -528,10 +528,20 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+<<<<<<< HEAD
                 <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
                 <li><a class="dropdown-item" href="#"><i class="fas fa-chart-line me-2"></i>Activity Log</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+=======
+                <div sec:authorize="isAnonymous()">
+                    <li><a class="dropdown-item" th:href="@{/login}">Login</a></li>
+                </div>
+                <li><hr class="dropdown-divider" /></li>
+                <div sec:authorize="isAuthenticated()">
+                    <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+                </div>
+>>>>>>> fff66f3f25479449adb236aab9d9eca2f872b195
             </ul>
         </li>
     </ul>
@@ -542,6 +552,7 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
+<<<<<<< HEAD
                     <div class="sb-sidenav-menu-heading">CORE</div>
                     <a class="nav-link active" href="#">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -578,6 +589,54 @@
                     </a>
                 </div>
             </div>
+=======
+                    <div class="sb-sidenav-menu-heading">Mantenimientos</div>
+                    <div sec:authorize="hasAnyAuthority('admin')">
+                        <a class="nav-link" href="">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <a class="nav-link" th:href="@{/roles}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Rol
+                        </a>
+                        <a class="nav-link" th:href="@{/usuarios}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Usuarios
+                        </a>
+                        <a class="nav-link" th:href="@{/equipos}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Equipos
+                        </a>
+                        <a class="nav-link" th:href="@{/reportes}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Reportes
+                        </a>
+                        <a class="nav-link" th:href="@{/auditorias}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Auditoria
+                        </a>
+                    </div>
+                    <div sec:authorize="hasAnyAuthority('admin', 'Tecnico')">
+                        <a class="nav-link" href="#">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Tareas
+                        </a>
+                        <a class="nav-link" href="#">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Historial de tareas
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div sec:authorize="isAuthenticated()" class="small">
+                    Haz iniciado con el correo:
+                    <span class="text-light" sec:authentication="name"></span>
+                </div>
+                Sistema de mantenimiento y lmpieza
+            </div>
+>>>>>>> fff66f3f25479449adb236aab9d9eca2f872b195
         </nav>
     </div>
 

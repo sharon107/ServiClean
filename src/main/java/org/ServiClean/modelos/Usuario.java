@@ -3,7 +3,13 @@ package org.ServiClean.modelos;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+<<<<<<< HEAD
 import java.util.HashSet;
+=======
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+>>>>>>> fff66f3f25479449adb236aab9d9eca2f872b195
 import java.util.Set;
 
 @Entity
@@ -26,7 +32,13 @@ public class Usuario {
     private String correo;
 
     @NotBlank(message = "La contraseña es requerida")
-    private String contraseña;
+    private String contrasena;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuario_rol",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id"))
+    private List<Rol> roles;
 
     @ManyToOne
     @JoinColumn(name = "id_rol", nullable = false)
@@ -34,6 +46,7 @@ public class Usuario {
 
     private Boolean estado = true;
 
+<<<<<<< HEAD
     @ManyToMany
     @JoinTable(
             name = "usuarios_tareas",
@@ -50,6 +63,19 @@ public class Usuario {
     public void setTareas(Set<Tarea> tareas) {
         this.tareas = tareas;
     }
+=======
+    // Relación Usuario → Auditoria (1:N)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Auditoria> auditorias = new ArrayList<>();
+
+    // 🔹 Relación Usuario (Creador) → Tareas (1:N)
+    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Tarea> tareasCreadas = new HashSet<>();
+
+    // 🔹 Relación Usuario (Asignado) → Tareas (1:N)
+    @OneToMany(mappedBy = "asignado", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Tarea> tareasAsignadas = new HashSet<>();
+>>>>>>> fff66f3f25479449adb236aab9d9eca2f872b195
 
     public Integer getId()
     { return id; }
@@ -75,21 +101,27 @@ public class Usuario {
     public void setCorreo(String correo)
     { this.correo = correo; }
 
-    public String getContraseña()
-    { return contraseña; }
+    public String getContrasena()
+    { return contrasena; }
 
-    public void setContraseña(String contraseña)
-    { this.contraseña = contraseña; }
-
-    public Rol getRol()
-    { return rol; }
-
-    public void setRol(Rol rol)
-    { this.rol = rol; }
+    public void setContrasena(String contraseña)
+    { this.contrasena = contraseña; }
 
     public Boolean getEstado()
     { return estado; }
 
     public void setEstado(Boolean estado)
     { this.estado = estado; }
+
+    public List<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
+    }
+
+    public Rol getRol() { return rol; }
+
+    public void setRol(Rol rol) { this.rol = rol; }
 }

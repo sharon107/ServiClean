@@ -1,0 +1,60 @@
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Crear nuevo usuario</h1>
+    <form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" class="form-control" th:field="*{apellido}" id="apellido" placeholder="Escriba el apellido" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="correo">Correo</label>
+                    <input type="email" class="form-control" th:field="*{correo}" id="correo" placeholder="Escriba el correo" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" class="form-control" th:field="*{contrasena}" id="contrasena" placeholder="Escriba la contraseña" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="roles">Roles</label>
+                    <select class="form-control" th:field="*{roles}" id="roles" multiple>
+                        <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select class="form-control" th:field="*{estado}" id="estado">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/usuarios}">Regresar</a>
+    </form>
+</div>

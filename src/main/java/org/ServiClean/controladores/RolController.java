@@ -65,7 +65,7 @@ public class RolController {
         }
 
         rolService.crearOEditar(rol);
-        attributes.addFlashAttribute("msg", "Grupo creado correctamente");
+        attributes.addFlashAttribute("msg", "Rol creado correctamente");
         return "redirect:/roles";
     }
 
