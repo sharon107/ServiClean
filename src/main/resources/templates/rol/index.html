@@ -1,58 +1,85 @@
-<html lang="en"
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/_mainLayout">
-
 <div layout:fragment="content">
 
-    <!-- Mostrar mensaje de confirmación en caso de éxito -->
-    <div th:if="${mg != null}">
+    <!-- Mensajes -->
+    <div th:if="${msg != null}">
         <script>
             Swal.fire({
-            title: "confirmación",
-            text: '[[${msg}]]',
-            icon: "success"
+                title: "Confirmación",
+                text: '[[${msg}]]',
+                icon: "success"
             });
         </script>
     </div>
-
-    <!-- Mostrar mensaje de error en caso de error -->
     <div th:if="${error != null}">
         <script>
             Swal.fire({
-            title: "Error",
-            text: '[[${error}]]',
-            icon: "error"
+                title: "Error",
+                text: '[[${error}]]',
+                icon: "error"
             });
         </script>
     </div>
 
-    <h1>Listado de Roles</h1>
-    <a th:href="@{/roles/create}" class="btn btn-outline-primary">Nuevo rol</a>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${roles}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.nombre}"></td>
-            <td>
-                <a th:href="@{/roles/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a>
-                <a th:href="@{/roles/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a>
-                <a th:href="@{/roles/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- Header y Botón Nuevo -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4">
+        <h1 class="h2">Listado de Roles</h1>
+        <a th:href="@{/roles/create}" class="btn btn-primary mt-2 mt-sm-0">Nuevo rol</a>
+    </div>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                <a class="page-link" th:href="@{|/roles?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+    <!-- Roles Grid -->
+    <div class="row g-3">
+        <div th:each="role : ${roles}" class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title" th:text="${role.nombre}">Nombre Rol</h5>
+                        <span th:text="${role.estado}"
+                              th:classappend="${role.estado == 'activo'} ? 'badge bg-success' : 'badge bg-danger'">
+                            Estado
+                        </span>
+                    </div>
+                    <p class="card-text text-muted mb-3" th:text="${role.descripcion}">Descripción del rol</p>
+
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item d-flex justify-content-between p-1">
+                            <span>ID:</span>
+                            <span th:text="${role.id}"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between p-1">
+                            <span>Fecha Creación:</span>
+                            <span th:text="${#dates.format(role.fechaCreacion, 'dd/MM/yyyy')}"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between p-1">
+                            <span>Fecha Edición:</span>
+                            <span th:text="${#dates.format(role.fechaEdicion, 'dd/MM/yyyy')}"></span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-auto d-flex gap-2">
+                        <a th:href="@{/roles/details/{id}(id=${role.id})}" class="btn btn-outline-secondary flex-fill btn-sm">Ver</a>
+                        <a th:href="@{/roles/edit/{id}(id=${role.id})}" class="btn btn-outline-primary flex-fill btn-sm">Editar</a>
+                        <a th:href="@{/roles/remove/{id}(id=${role.id})}" class="btn btn-outline-danger flex-fill btn-sm">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div th:if="${#lists.isEmpty(roles)}" class="text-center py-5 text-muted">
+        <h5>No se encontraron roles</h5>
+        <p>Intenta ajustar tus filtros de búsqueda</p>
+    </div>
+
+    <!-- Paginación -->
+    <nav th:if="${pageNumbers != null}" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center mt-4">
+            <li th:each="pageNumber : ${pageNumbers}" class="page-item">
+                <a th:href="@{|/roles?page=${pageNumber}|}" class="page-link" th:text="${pageNumber}"></a>
             </li>
         </ul>
     </nav>

@@ -1,22 +1,32 @@
-<html lang="en"
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/_mainLayout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Rol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Detalles del Rol</h1>
+    </div>
 
-<div layout:fragment="content">
-    <h1>Detalles del rol</h1>
-    <div>
-        <hr />
-        <dl class ="row">
-            <dt class = "col-sm-2">ID</dt>
-            <dd class = "col-sm-10" th:text="${rol.id}"></dd>
+    <div class="bg-white rounded-xl shadow-sm p-6 space-y-4">
+        <div><strong>ID:</strong> <span th:text="${rol.id}"></span></div>
+        <div><strong>Nombre:</strong> <span th:text="${rol.nombre}"></span></div>
+        <div><strong>Descripción:</strong> <span th:text="${rol.descripcion}"></span></div>
+        <div><strong>Estado:</strong> <span th:text="${rol.estado}"></span></div>
+        <div><strong>Fecha de Creación:</strong> <span th:text="${rol.fechaCreacion}"></span></div>
+        <div><strong>Fecha de Edición:</strong> <span th:text="${rol.fechaEdicion}"></span></div>
+    </div>
 
-            <dt class = "col-sm-2">Nombre</dt>
-            <dd class = "col-sm-10" th:text="${rol.nombre}"></dd>
-        </dl>
-
-        <a th:href="@{/roles/edit/{id} (id = ${rol.id}) }" class="btn btn-outline-info">Editar</a> |
-        <a th:href="@{/roles}">Regresar</a> |
+    <div class="flex justify-start gap-3 mt-4">
+        <a th:href="@{/roles/edit/{id}(id=${rol.id})}" class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Editar</a>
+        <a th:href="@{/roles}" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Regresar</a>
     </div>
 </div>
+</body>
 </html>

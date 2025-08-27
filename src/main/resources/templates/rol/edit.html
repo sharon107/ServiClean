@@ -1,24 +1,50 @@
-<html lang="en"
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/_mainLayout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Rol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Editar Rol</h1>
+        <p class="text-gray-600">Modifica los datos del rol</p>
+    </div>
 
-<div layout:fragment="content">
-    <h1>Editar rol</h1>
-    <form th:action="@{/roles/save}" th:object="${rol}" method="post">
+    <form th:action="@{/roles/save}" th:object="${rol}" method="post" class="bg-white rounded-xl shadow-sm p-6 space-y-6">
         <input type="hidden" th:field="*{id}">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre del rol" required>
-                </div>
-            </div>
+
+        <div>
+            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre <span class="text-red-500">*</span></label>
+            <input type="text" id="nombre" th:field="*{nombre}" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
         </div>
 
-        <hr>
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        <a th:href="@{/roles}">Regresar</a>
+        <div>
+            <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+            <textarea id="descripcion" th:field="*{descripcion}" rows="3"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"></textarea>
+        </div>
+
+        <div>
+            <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
+            <select id="estado" th:field="*{estado}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                <option value="Activo" th:selected="${rol.estado == 'Activo'}">Activo</option>
+                <option value="Inactivo" th:selected="${rol.estado == 'Inactivo'}">Inactivo</option>
+            </select>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex justify-end gap-3">
+            <a th:href="@{/roles}" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</a>
+            <button type="submit" class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Guardar cambios</button>
+        </div>
     </form>
 </div>
+</body>
 </html>
