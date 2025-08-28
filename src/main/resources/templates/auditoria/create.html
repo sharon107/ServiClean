@@ -1,44 +1,163 @@
-<html lang="en"
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/_mainLayout">
 
 <div layout:fragment="content">
-    <h1>Crear nueva Auditoria</h1>
-    <form th:action="@{/auditorias/save}" th:object="${auditoria}" method="post">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <!-- Selección de usuario -->
-                    <label for="usuario">Usuario</label>
-                    <select class="form-control" th:field="*{usuario}" id="usuario" required>
-                        <option th:each="usuario : ${usuarios}"
-                                th:value="${usuario.id}"
-                                th:text="${usuario.nombre + ' ' + usuario.apellido}">
-                        </option>
-                    </select>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
 
-                    <!-- Acción -->
-                    <label for="accion">Acción</label>
-                    <input type="text" class="form-control" th:field="*{accion}" id="accion" placeholder="Escriba la acción" required>
+                <!-- Título principal con animación -->
+                <div class="page-header mb-5">
+                    <h1 class="main-title">
+                        <i class="fas fa-plus-circle me-3"></i>
+                        Crear Nueva Auditoría
+                    </h1>
+                    <div class="title-underline"></div>
+                    <p class="page-subtitle">Complete los datos para registrar una nueva auditoría</p>
+                </div>
 
-                    <!-- Tabla afectada -->
-                    <label for="tablaAfectada">Tabla Afectada</label>
-                    <input type="text" class="form-control" th:field="*{tablaAfectada}" id="tablaAfectada" placeholder="Escriba la tabla afectada" required>
+                <!-- Formulario con diseño moderno -->
+                <div class="modern-card form-card">
+                    <div class="card-glow"></div>
+                    <form th:action="@{/auditorias/save}" th:object="${auditoria}" method="post">
+                        <div class="row g-4">
 
-                    <!-- Descripción -->
-                    <label for="descripcion">Descripción</label>
-                    <input type="text" class="form-control" th:field="*{descripcion}" id="descripcion" placeholder="Escriba la descripción" required>
+                            <!-- Usuario -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-user me-2"></i>Usuario
+                                    </label>
+                                    <select th:field="*{usuario}" class="modern-input" required>
+                                        <option th:each="usuario : ${usuarios}"
+                                                th:value="${usuario.id}"
+                                                th:text="${usuario.nombre + ' ' + usuario.apellido}">
+                                        </option>
+                                    </select>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
 
-                    <!-- Fecha -->
-                    <label>Fecha</label>
-                    <p th:text="${#temporals.format(T(java.time.LocalDateTime).now(), 'dd/MM/yyyy')}"></p>
+                            <!-- Acción -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-edit me-2"></i>Acción
+                                    </label>
+                                    <input type="text" th:field="*{accion}" class="modern-input" placeholder="Escriba la acción" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Tabla Afectada -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-table me-2"></i>Tabla Afectada
+                                    </label>
+                                    <input type="text" th:field="*{tablaAfectada}" class="modern-input" placeholder="Escriba la tabla afectada" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-file-alt me-2"></i>Descripción
+                                    </label>
+                                    <input type="text" th:field="*{descripcion}" class="modern-input" placeholder="Escriba la descripción" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Fecha (solo lectura) -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Fecha
+                                    </label>
+                                    <input type="text" class="modern-input" th:value="${#temporals.format(T(java.time.LocalDateTime).now(), 'dd/MM/yyyy')}" readonly>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-divider"></div>
+
+                        <!-- Botones -->
+                        <div class="action-buttons">
+                            <button type="submit" class="btn-modern btn-primary-modern">
+                                <i class="fas fa-save me-2"></i>Guardar Auditoría
+                            </button>
+                            <a th:href="@{/auditorias}" class="btn-modern btn-secondary-modern">
+                                <i class="fas fa-arrow-left me-2"></i>Regresar
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <hr>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a th:href="@{/auditorias}" class="btn btn-secondary">Regresar</a>
-    </form>
+    </div>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos CSS (idénticos al formulario de tareas) -->
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        * { font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; color: #2c3e50; }
+
+        .page-header { text-align: center; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem; }
+        .title-underline { width: 100px; height: 4px; background: var(--primary-gradient); margin: 0 auto 1.5rem; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; }
+        .page-subtitle { color: #6c757d; font-size: 1.1rem; font-weight: 500; }
+
+        .modern-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 25px; padding: 2.5rem; box-shadow: var(--card-shadow); border: 1px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); animation: fadeInUp 0.8s ease forwards; }
+        .modern-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+        .card-glow { position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: var(--primary-gradient); border-radius: 25px; opacity: 0; z-index: -1; transition: opacity 0.3s ease; }
+        .modern-card:hover .card-glow { opacity: 0.1; animation: rotate 3s linear infinite; }
+
+        .input-group-modern { position: relative; margin-bottom: 1.5rem; }
+        .modern-label { display: block; margin-bottom: 0.8rem; font-weight: 600; color: #2c3e50; font-size: 1rem; }
+        .modern-input { width: 100%; padding: 1rem 1.5rem; border: 2px solid rgba(108,117,125,0.2); border-radius: 15px; background: rgba(255,255,255,0.9); font-size: 1rem; transition: all 0.3s ease; position: relative; }
+        .modern-input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); background: rgba(255,255,255,1); }
+        .input-highlight { position: absolute; bottom: 0; left: 50%; width: 0; height: 3px; background: var(--primary-gradient); border-radius: 2px; transition: all 0.3s ease; transform: translateX(-50%); }
+        .modern-input:focus + .input-highlight { width: 100%; }
+
+        .form-divider { height: 2px; background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent); margin: 2rem 0; border: none; border-radius: 1px; }
+
+        .action-buttons { display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+        .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border: none; border-radius: 50px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; text-transform: uppercase; letter-spacing: 0.5px; min-width: 150px; cursor: pointer; }
+        .btn-modern::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
+        .btn-modern:hover::before { left: 100%; }
+        .btn-primary-modern { background: var(--primary-gradient); color: white; box-shadow: 0 4px 15px rgba(102,126,234,0.3); }
+        .btn-primary-modern:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(102,126,234,0.4); color: white; }
+        .btn-secondary-modern { background: rgba(108,117,125,0.1); color: #6c757d; border: 2px solid rgba(108,117,125,0.2); backdrop-filter: blur(10px); }
+        .btn-secondary-modern:hover { background: rgba(108,117,125,0.2); color: #495057; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(108,117,125,0.2); text-decoration: none; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes expandWidth { from { width: 0; } to { width: 100px; } }
+        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 2rem; }
+            .modern-card { padding: 1.5rem; }
+            .action-buttons { justify-content: center; }
+            .btn-modern { min-width: 120px; font-size: 0.9rem; }
+        }
+    </style>
 </div>
 </html>
