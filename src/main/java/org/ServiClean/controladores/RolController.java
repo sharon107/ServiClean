@@ -9,13 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,56 +45,84 @@ public class RolController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        // 📊 Estadísticas
+        List<Rol> listaRoles = rolService.obtenerTodos();
+        long totalRoles = listaRoles.size();
+        long activos = listaRoles.stream()
+                .filter(r -> r.getEstado() != null && r.getEstado())
+                .count();
+        long inactivos = totalRoles - activos;
+
+        model.addAttribute("totalRoles", totalRoles);
+        model.addAttribute("totalRolesActivos", activos);    // CORREGIDO
+        model.addAttribute("totalRolesInactivos", inactivos); // CORREGIDO
+
         return "rol/index";
     }
 
     @GetMapping("/create")
-    public String create (Rol rol){
+    public String create(Rol rol) {
         return "rol/create";
     }
 
     @PostMapping("/save")
-    public String save(Rol rol, BindingResult result, Model model, RedirectAttributes attributes){
-        if(result.hasErrors()){
-            model.addAttribute(rol);
-            attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
-            return "rol/create";
+    public String save(Rol rol, BindingResult result, Model model, RedirectAttributes attributes) {
+        LocalDateTime ahora = LocalDateTime.now();
+
+        if (rol.getId() == null) {
+            // Creación
+            rol.setEstado(true); // Siempre activo al crear
+            rol.setFechaCreacion(ahora);
+        } else {
+            // Edición
+            rol.setFechaEdicion(ahora);
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("rol", rol);
+            attributes.addFlashAttribute("error", "No se pudo guardar debido a errores en el formulario.");
+            return (rol.getId() == null) ? "rol/create" : "rol/edit";
         }
 
         rolService.crearOEditar(rol);
-        attributes.addFlashAttribute("msg", "Rol creado correctamente");
+        attributes.addFlashAttribute("msg", "Rol guardado correctamente");
         return "redirect:/roles";
     }
 
     @GetMapping("/details/{id}")
-    public String details(@PathVariable("id") Integer id, Model model){
-        Rol rol = rolService.buscarPorId(id).get();
-        model.addAttribute("rol", rol);
+    public String details(@PathVariable("id") Integer id, Model model) {
+        Optional<Rol> optionalRol = rolService.buscarPorId(id);
+        if (optionalRol.isEmpty()) {
+            return "redirect:/roles";
+        }
+        model.addAttribute("rol", optionalRol.get());
         return "rol/details";
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, Model model){
-        Rol rol = rolService.buscarPorId(id).get();
-        model.addAttribute("rol", rol);
+    public String edit(@PathVariable("id") Integer id, Model model) {
+        Optional<Rol> optionalRol = rolService.buscarPorId(id);
+        if (optionalRol.isEmpty()) {
+            return "redirect:/roles";
+        }
+        model.addAttribute("rol", optionalRol.get());
         return "rol/edit";
     }
 
     @GetMapping("/remove/{id}")
-    public String remove(@PathVariable("id") Integer id, Model model){
-        Rol rol = rolService.buscarPorId(id).get();
-        model.addAttribute("rol", rol);
+    public String remove(@PathVariable("id") Integer id, Model model) {
+        Optional<Rol> optionalRol = rolService.buscarPorId(id);
+        if (optionalRol.isEmpty()) {
+            return "redirect:/roles";
+        }
+        model.addAttribute("rol", optionalRol.get());
         return "rol/delete";
     }
 
     @PostMapping("/delete")
-    public String delete(Rol rol, RedirectAttributes attributes){
-        rolService.eliminarPorId(rol.getId());
+    public String delete(@RequestParam("id") Integer id, RedirectAttributes attributes) {
+        rolService.eliminarPorId(id);
         attributes.addFlashAttribute("msg", "Rol eliminado correctamente");
         return "redirect:/roles";
     }
-
-
-
-
 }

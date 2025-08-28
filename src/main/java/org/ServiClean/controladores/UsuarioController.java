@@ -50,6 +50,9 @@ public class UsuarioController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        // Menú activo
+        model.addAttribute("activePage", "usuarios");
+
         return "usuario/index";
     }
 
@@ -57,6 +60,10 @@ public class UsuarioController {
     public String create(Model model) {
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("roles", rolService.obtenerTodos());
+
+        // Menú activo
+        model.addAttribute("activePage", "usuarios");
+
         return "usuario/create";
     }
 
@@ -65,6 +72,7 @@ public class UsuarioController {
         if(result.hasErrors()){
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
             model.addAttribute("roles", rolService.obtenerTodos());
+            model.addAttribute("activePage", "usuarios");
             return "usuario/create";
         }
 
@@ -75,10 +83,8 @@ public class UsuarioController {
         if (usuario.getRoles() == null){
             ArrayList<Rol> Listaroles = new ArrayList<Rol>();
             Listaroles.add(usuario.getRol());
-
             usuario.setRoles(Listaroles);
         }
-
 
         usuarioService.crearOEditar(usuario);
         attributes.addFlashAttribute("msg", "Usuario creado correctamente");
@@ -90,6 +96,7 @@ public class UsuarioController {
         Optional<Usuario> usuarioOptional = usuarioService.buscarPorId(id);
         if (usuarioOptional.isPresent()) {
             model.addAttribute("usuario", usuarioOptional.get());
+            model.addAttribute("activePage", "usuarios");
             return "usuario/details";
         } else {
             attributes.addFlashAttribute("error", "El usuario no fue encontrado.");
@@ -104,6 +111,7 @@ public class UsuarioController {
         if (usuarioOptional.isPresent()) {
             model.addAttribute("usuario", usuarioOptional.get());
             model.addAttribute("roles", rolService.obtenerTodos());
+            model.addAttribute("activePage", "usuarios");
             return "usuario/edit";
         } else {
             attributes.addFlashAttribute("error", "El usuario no fue encontrado.");
@@ -116,6 +124,7 @@ public class UsuarioController {
         Optional<Usuario> usuarioOptional = usuarioService.buscarPorId(id);
         if (usuarioOptional.isPresent()) {
             model.addAttribute("usuario", usuarioOptional.get());
+            model.addAttribute("activePage", "usuarios");
             return "usuario/delete";
         } else {
             attributes.addFlashAttribute("error", "El usuario no fue encontrado.");

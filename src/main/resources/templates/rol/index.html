@@ -1,61 +1,145 @@
-<html lang="en"
+<!DOCTYPE html>
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/_mainLayout">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Roles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
 <div layout:fragment="content">
 
-    <!-- Mostrar mensaje de confirmación en caso de éxito -->
-    <div th:if="${mg != null}">
+    <!-- Mensajes -->
+    <div th:if="${msg != null}">
         <script>
             Swal.fire({
-            title: "confirmación",
-            text: '[[${msg}]]',
-            icon: "success"
+                title: "Confirmación",
+                text: '[[${msg}]]',
+                icon: "success",
+                timer: 2000,
+                showConfirmButton: false
             });
         </script>
     </div>
-
-    <!-- Mostrar mensaje de error en caso de error -->
     <div th:if="${error != null}">
         <script>
             Swal.fire({
-            title: "Error",
-            text: '[[${error}]]',
-            icon: "error"
+                title: "Error",
+                text: '[[${error}]]',
+                icon: "error",
+                timer: 2000,
+                showConfirmButton: false
             });
         </script>
     </div>
 
-    <h1>Listado de Roles</h1>
-    <a th:href="@{/roles/create}" class="btn btn-outline-primary">Nuevo rol</a>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${roles}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.nombre}"></td>
-            <td>
-                <a th:href="@{/roles/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a>
-                <a th:href="@{/roles/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a>
-                <a th:href="@{/roles/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 p-4 bg-gradient-to-r
+    from-purple-500 to-indigo-600 text-white rounded-xl">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-user-shield fa-2x"></i>
+            <div>
+                <h1 class="text-2xl font-bold">Gestión de Roles</h1>
+                <p class="opacity-80">Listado de los roles del sistema</p>
+            </div>
+        </div>
+        <a th:href="@{/roles/create}" class="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow
+        flex items-center gap-2 mt-3 sm:mt-0 hover:bg-indigo-50">
+            <i class="fas fa-plus"></i> Crear nuevo rol
+        </a>
+    </div>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                <a class="page-link" th:href="@{|/roles?page=${pageNumber}|}" th:text="${pageNumber}"></a>
-            </li>
-        </ul>
-    </nav>
+    <!-- Estadísticas -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+            <div>
+                <h6 class="text-gray-500">Total Roles</h6>
+                <h2 class="text-2xl font-bold" th:text="${totalRoles}">0</h2>
+            </div>
+            <div class="bg-indigo-100 p-3 rounded-full">
+                <i class="fas fa-users text-indigo-600 fa-lg"></i>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+            <div>
+                <h6 class="text-gray-500">Roles Activos</h6>
+                <h2 class="text-2xl font-bold text-green-600" th:text="${totalRolesActivos}">0</h2>
+            </div>
+            <div class="bg-green-100 p-3 rounded-full">
+                <i class="fas fa-check-circle text-green-600 fa-lg"></i>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+            <div>
+                <h6 class="text-gray-500">Roles Inactivos</h6>
+                <h2 class="text-2xl font-bold text-red-600" th:text="${totalRolesInactivos}">0</h2>
+            </div>
+            <div class="bg-red-100 p-3 rounded-full">
+                <i class="fas fa-times-circle text-red-600 fa-lg"></i>
+            </div>
+        </div>
+    </div>
 
+    <!-- Grid de Roles -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div th:each="role : ${roles}" class="bg-white rounded-xl shadow hover:shadow-lg transition p-4
+        flex flex-col justify-between hover-card">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="bg-indigo-100 p-2 rounded-md">
+                        <i class="fas fa-user-tag text-indigo-600"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-lg" th:text="${role.nombre}">Nombre Rol</h5>
+                        <span th:text="${role.estado} ? 'Activo' : 'Inactivo'"
+                              th:classappend="${role.estado} ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+                        </span>
+                    </div>
+                </div>
+                <p class="text-gray-500 text-sm mb-4" th:text="${role.descripcion}">Descripción del rol</p>
+
+                <div class="grid grid-cols-1 gap-2 text-sm text-gray-600">
+                    <div class="flex justify-between bg-gray-100 rounded p-2">
+                        <span><i class="fas fa-hashtag mr-1"></i>ID</span>
+                        <span th:text="${role.id}">1</span>
+                    </div>
+                    <div class="flex justify-between bg-gray-100 rounded p-2">
+                        <span><i class="fas fa-calendar-plus mr-1"></i>Creación</span>
+                        <span th:text="${#temporals.format(role.fechaCreacion, 'dd/MM/yyyy')}">01/01/2024</span>
+                    </div>
+                    <div class="flex justify-between bg-gray-100 rounded p-2">
+                        <span><i class="fas fa-edit mr-1"></i>Última edición</span>
+                        <span th:text="${#temporals.format(role.fechaEdicion, 'dd/MM/yyyy')}">05/01/2024</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="mt-4 flex gap-2">
+                <a th:href="@{/roles/details/{id}(id=${role.id})}" class="flex-1 btn bg-blue-100 text-blue-600 py-1
+                rounded hover:bg-blue-200 flex items-center justify-center gap-1">
+                    <i class="fas fa-eye"></i> Ver </a>
+                <a th:href="@{/roles/edit/{id}(id=${role.id})}" class="flex-1 btn bg-purple-100 text-yellow-600 py-1
+                rounded hover:bg-yellow-200 flex items-center justify-center gap-1">
+                    <i class="fas fa-edit"></i> Editar </a>
+                <a th:href="@{/roles/remove/{id}(id=${role.id})}" class="flex-1 btn bg-red-100 text-red-600 py-1
+                rounded hover:bg-red-200 flex items-center justify-center gap-1">
+                    <i class="fas fa-trash"></i> Eliminar </a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .hover-card:hover {
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+    }
+</style>
 </html>

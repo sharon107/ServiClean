@@ -1,13 +1,171 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="/layouts/_mainLayout">
 
-<div layout:fragment="content">
+<div layout:fragment="content" class="container py-5"
+     style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; padding: 3rem;">
 
-    <h1 class="text-center">Bienvenidos!!!</h1>
-    <div sec:authorize="isAnonymous()" class="alert alert-danger text-center" role="alert">
-        Debes iniciar sesión para poder utilizar la aplicación.
+    <div class="text-center mb-5 text-white">
+        <h1 class="display-4">¡Bienvenidos a ServiClean!</h1>
+        <p class="lead">Sistema de mantenimiento y limpieza de equipos informáticos</p>
+    </div>
+
+    <!-- Mensaje para usuarios no autenticados -->
+    <div sec:authorize="isAnonymous()"
+         class="alert text-center py-5 px-4 custom-alert" role="alert">
+        <i class="fas fa-user-lock fa-3x mb-3 text-primary"></i>
+        <h5 class="mb-3">¡Debes iniciar sesión!</h5>
+        <p class="mb-4">Para acceder a todas las funcionalidades del sistema, inicia sesión ahora.</p>
+        <a th:href="@{/login}" class="btn btn-primary btn-sm custom-btn">
+            <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión
+        </a>
+    </div>
+
+    <style>
+        .custom-alert {
+            background: linear-gradient(135deg, #c3dafe, #a3bffa);
+            color: #1e3a8a;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .custom-alert:hover {
+            transform: translateY(-5px);
+        }
+
+        .custom-alert i {
+            display: block;
+            margin: 0 auto 15px auto;
+        }
+
+        .custom-btn {
+            background-color: #5a67d8;
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            background-color: #434190;
+            transform: scale(1.05);
+        }
+
+        /* Botones más pequeños dentro de las cards */
+        .card-btn {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .card-btn:hover {
+            transform: scale(1.05);
+            background-color: #e0e0e0;
+        }
+
+        /* Estilo para las cards */
+        .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+        }
+        .hover-card:hover {
+            transform: translateY(-7px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Tarjeta informativa del sistema */
+        .system-info-card {
+            background: linear-gradient(135deg, #e6e0f8, #dcd3f5);
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 2rem;
+        }
+        .system-info-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #d8cffc;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+    </style>
+
+    <!-- Resumen rápido para usuarios autenticados -->
+    <div sec:authorize="isAuthenticated()" class="row text-center g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm py-4 h-100 hover-card" style="background: #a3bffa;">
+                <i class="fas fa-users fa-3x text-white mb-2"></i>
+                <h5 class="text-white">Usuarios</h5>
+                <a th:href="@{/usuarios}" class="btn card-btn btn-light custom-btn">Ver usuarios</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm py-4 h-100 hover-card" style="background: #c3befa;">
+                <i class="fas fa-user-shield fa-3x text-white mb-2"></i>
+                <h5 class="text-white">Roles</h5>
+                <a th:href="@{/roles}" class="btn card-btn btn-light custom-btn">Ver roles</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm py-4 h-100 hover-card" style="background: #b8b5f7;">
+                <i class="fas fa-toolbox fa-3x text-white mb-2"></i>
+                <h5 class="text-white">Equipos</h5>
+                <a th:href="@{/equipos}" class="btn card-btn btn-light custom-btn">Ver equipos</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm py-4 h-100 hover-card" style="background: #9fa6f0;">
+                <i class="fas fa-chart-line fa-3x text-white mb-2"></i>
+                <h5 class="text-white">Reportes</h5>
+                <a th:href="@{/reportes}" class="btn card-btn btn-light custom-btn">Ver reportes</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm py-4 h-100 hover-card" style="background: #8f95e8;">
+                <i class="fas fa-search-plus fa-3x text-white mb-2"></i>
+                <h5 class="text-white">Auditorías</h5>
+                <a th:href="@{/auditorias}" class="btn card-btn btn-light custom-btn">Ver auditorías</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm py-4 h-100 hover-card" style="background: #7f82e0;">
+                <i class="fas fa-tasks fa-3x text-white mb-2"></i>
+                <h5 class="text-white">Tareas</h5>
+                <a th:href="@{/tareas}" class="btn card-btn btn-light custom-btn">Ver tareas</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apartado sobre el sistema -->
+    <div class="col-12 mt-5 mb-4">
+        <div class="card shadow-lg p-4 system-info-card d-flex flex-md-row flex-column align-items-center gap-4">
+            <div class="icon-circle d-flex justify-content-center align-items-center">
+                <i class="fas fa-broom fa-2x text-dark"></i>
+            </div>
+            <div class="text-black text-md-start text-center">
+                <h4 class="mb-3 fw-bold">Acerca de ServiClean</h4>
+                <p class="mb-0 fs-6">
+                    ServiClean es un sistema de mantenimiento y limpieza de equipos informáticos.
+                    Su objetivo es facilitar la gestión de <strong>usuarios, roles, equipos, tareas, auditorías y reportes</strong>,
+                    asegurando un control eficiente y organizado de todos los procesos relacionados con el mantenimiento de equipos.
+                </p>
+            </div>
+        </div>
     </div>
 
 </div>
