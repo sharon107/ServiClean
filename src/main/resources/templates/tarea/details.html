@@ -43,7 +43,9 @@
                             <div class="detail-card">
                                 <i class="fas fa-users detail-icon"></i>
                                 <h5>Equipo</h5>
-                                <p th:text="${tarea.equipo} != null ? ${tarea.equipo.nombre} : 'Sin equipo'"></p>
+                                <p th:text="${tarea.equipo != null} ? ${tarea.equipo.nombreEquipo} : 'Sin equipo'"></p>
+
+
                             </div>
                         </div>
 

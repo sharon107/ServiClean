@@ -11,8 +11,8 @@
             <dt class = "col-sm-2">ID</dt>
             <dd class = "col-sm-10" th:text="${auditoria.id}"></dd>
 
-            <dt class = "col-sm-2">Usuario</dt>
-            <dd class = "col-sm-10" th:text="${auditoria.usuario}"></dd>
+            <dt class="col-sm-2">Usuario</dt>
+            <dd class="col-sm-10" th:text="${auditoria.usuario.nombre} + ' ' + ${auditoria.usuario.apellido}"></dd>
 
             <dt class = "col-sm-2">Accion</dt>
             <dd class = "col-sm-10" th:text="${auditoria.accion}"></dd>

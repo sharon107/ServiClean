@@ -2,6 +2,7 @@ package org.ServiClean.controladores;
 
 import org.ServiClean.modelos.Auditoria;
 import org.ServiClean.servicios.interfaces.IAuditoriaService;
+import org.ServiClean.servicios.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,11 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -28,6 +25,10 @@ public class AuditoriaController {
     @Autowired
     private IAuditoriaService auditoriaService;
 
+    @Autowired
+    private IUsuarioService usuarioService; // <-- servicio de usuarios
+
+    // Listado con paginación
     @GetMapping
     public String index(Model model,
                         @RequestParam("page") Optional<Integer> page,
@@ -51,15 +52,19 @@ public class AuditoriaController {
         return "auditoria/index";
     }
 
+    // Crear nueva auditoría
     @GetMapping("/create")
-    public String create (Auditoria auditoria){
+    public String create(Model model){
+        model.addAttribute("auditoria", new Auditoria());
+        model.addAttribute("usuarios", usuarioService.obtenerTodos()); // <-- aquí usamos obtenerTodos()
         return "auditoria/create";
     }
 
+    // Guardar auditoría
     @PostMapping("/save")
     public String save(Auditoria auditoria, BindingResult result, Model model, RedirectAttributes attributes){
         if(result.hasErrors()){
-            model.addAttribute(auditoria);
+            model.addAttribute("usuarios", usuarioService.obtenerTodos()); // <-- también aquí
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
             return "auditoria/create";
         }
@@ -69,6 +74,7 @@ public class AuditoriaController {
         return "redirect:/auditorias";
     }
 
+    // Detalles de auditoría
     @GetMapping("/details/{id}")
     public String details(@PathVariable("id") Integer id, Model model){
         Auditoria auditoria = auditoriaService.buscarPorId(id).get();
@@ -76,13 +82,16 @@ public class AuditoriaController {
         return "auditoria/details";
     }
 
+    // Editar auditoría
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model){
         Auditoria auditoria = auditoriaService.buscarPorId(id).get();
         model.addAttribute("auditoria", auditoria);
+        model.addAttribute("usuarios", usuarioService.obtenerTodos()); // <-- aquí también
         return "auditoria/edit";
     }
 
+    // Eliminar auditoría
     @GetMapping("/remove/{id}")
     public String remove(@PathVariable("id") Integer id, Model model){
         Auditoria auditoria = auditoriaService.buscarPorId(id).get();

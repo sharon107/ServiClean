@@ -7,17 +7,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface IRolService {
-Page<Rol> buscarTodosPaginados(Pageable pageable);
 
-List<Rol> obtenerTodos();
+    Page<Rol> buscarTodosPaginados(Pageable pageable);
 
-Optional<Rol> buscarPorId(Integer id);
+    List<Rol> obtenerTodos();
 
-Rol crearOEditar(Rol rol);
+    Optional<Rol> buscarPorId(Integer id);
 
-void eliminarPorId(Integer rol);
+    Rol crearOEditar(Rol rol);
 
-
+    void eliminarPorId(Integer id); // 🔹 Cambié "rol" por "id" para que sea más claro
 }

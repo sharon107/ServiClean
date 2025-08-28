@@ -106,4 +106,5 @@ public class TareaController {
         attributes.addFlashAttribute("msg", "Tarea eliminada correctamente");
         return "redirect:/tareas";
     }
+
 }

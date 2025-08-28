@@ -45,6 +45,18 @@ public class RolController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        // 📊 Estadísticas
+        List<Rol> listaRoles = rolService.obtenerTodos();
+        long totalRoles = listaRoles.size();
+        long activos = listaRoles.stream()
+                .filter(r -> r.getEstado() != null && r.getEstado())
+                .count();
+        long inactivos = totalRoles - activos;
+
+        model.addAttribute("totalRoles", totalRoles);
+        model.addAttribute("totalRolesActivos", activos);    // CORREGIDO
+        model.addAttribute("totalRolesInactivos", inactivos); // CORREGIDO
+
         return "rol/index";
     }
 
@@ -55,32 +67,32 @@ public class RolController {
 
     @PostMapping("/save")
     public String save(Rol rol, BindingResult result, Model model, RedirectAttributes attributes) {
-
-        // Validación de fechas (solo si vienen asignadas, normalmente JPA las setea automáticamente)
         LocalDateTime ahora = LocalDateTime.now();
-        if(rol.getFechaCreacion() != null && rol.getFechaCreacion().isAfter(ahora)) {
-            result.rejectValue("fechaCreacion", "error.rol", "La fecha de creación no puede ser futura");
-        }
-        if(rol.getFechaEdicion() != null && rol.getFechaEdicion().isAfter(ahora)) {
-            result.rejectValue("fechaEdicion", "error.rol", "La fecha de edición no puede ser futura");
+
+        if (rol.getId() == null) {
+            // Creación
+            rol.setEstado(true); // Siempre activo al crear
+            rol.setFechaCreacion(ahora);
+        } else {
+            // Edición
+            rol.setFechaEdicion(ahora);
         }
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             model.addAttribute("rol", rol);
             attributes.addFlashAttribute("error", "No se pudo guardar debido a errores en el formulario.");
-            return "rol/create";
+            return (rol.getId() == null) ? "rol/create" : "rol/edit";
         }
 
-        // No es necesario setear fechas manualmente, JPA lo hace automáticamente
         rolService.crearOEditar(rol);
         attributes.addFlashAttribute("msg", "Rol guardado correctamente");
         return "redirect:/roles";
     }
 
     @GetMapping("/details/{id}")
-    public String details(@PathVariable("id") Integer id, Model model){
+    public String details(@PathVariable("id") Integer id, Model model) {
         Optional<Rol> optionalRol = rolService.buscarPorId(id);
-        if(optionalRol.isEmpty()){
+        if (optionalRol.isEmpty()) {
             return "redirect:/roles";
         }
         model.addAttribute("rol", optionalRol.get());
@@ -88,9 +100,9 @@ public class RolController {
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, Model model){
+    public String edit(@PathVariable("id") Integer id, Model model) {
         Optional<Rol> optionalRol = rolService.buscarPorId(id);
-        if(optionalRol.isEmpty()){
+        if (optionalRol.isEmpty()) {
             return "redirect:/roles";
         }
         model.addAttribute("rol", optionalRol.get());
@@ -98,9 +110,9 @@ public class RolController {
     }
 
     @GetMapping("/remove/{id}")
-    public String remove(@PathVariable("id") Integer id, Model model){
+    public String remove(@PathVariable("id") Integer id, Model model) {
         Optional<Rol> optionalRol = rolService.buscarPorId(id);
-        if(optionalRol.isEmpty()){
+        if (optionalRol.isEmpty()) {
             return "redirect:/roles";
         }
         model.addAttribute("rol", optionalRol.get());
@@ -108,7 +120,7 @@ public class RolController {
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestParam("id") Integer id, RedirectAttributes attributes){
+    public String delete(@RequestParam("id") Integer id, RedirectAttributes attributes) {
         rolService.eliminarPorId(id);
         attributes.addFlashAttribute("msg", "Rol eliminado correctamente");
         return "redirect:/roles";

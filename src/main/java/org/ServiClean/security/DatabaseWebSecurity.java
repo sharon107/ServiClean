@@ -32,12 +32,12 @@ public class DatabaseWebSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                 //aperturar el acceso a los recursos estaticos
-                .requestMatchers("/assets/**", "/css/**", "/js/**", "img/**", "/roles/**").permitAll()
+                .requestMatchers("/assets/**", "/css/**", "/js/**", "img/**" ).permitAll()
                 // las vistas publicas no requieren autenticacion
                 .requestMatchers("/", "/privacy", "/terms").permitAll()
 
                 //Asignar permisos a Url por roles
-                //.requestMatchers("/roles/**").hasAnyAuthority("admin")
+                .requestMatchers("/roles/**").hasAnyAuthority("admin")
                 .requestMatchers("/usuarios/**").hasAnyAuthority("admin")
                 .requestMatchers("/equipos/**").hasAnyAuthority("admin")
                 .requestMatchers("/auditorias/**").hasAnyAuthority("admin")
