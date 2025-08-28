@@ -33,7 +33,7 @@
     <thead>
     <tr>
       <th>ID</th>
-      <th>Id Usuario</th>
+      <th>Usuario</th>
       <th>Accion</th>
       <th>Tabla Afectada</th>
       <th>Descripcion</th>
@@ -43,7 +43,7 @@
     <tbody>
     <tr th:each="item : ${auditorias}">
       <td th:text="${item.id}"></td>
-      <td th:text="${item.id_usuario}"></td>
+      <td th:text="${item.usuario.nombre} + ' ' + ${item.usuario.apellido}"></td>
       <td th:text="${item.accion}"></td>
       <td th:text="${item.tablaAfectada}"></td>
       <td th:text="${item.descripcion}"></td>
