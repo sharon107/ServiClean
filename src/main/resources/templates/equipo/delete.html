@@ -1,38 +1,145 @@
-<html lang="en"
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/_mainLayout">
 
 <div layout:fragment="content">
-    <h1>Eliminar Equipo</h1>
-    <div>
-        <hr />
-        <dl class ="row">
-            <dt class = "col-sm-2">ID</dt>
-            <dd class = "col-sm-10" th:text="${equipo.id}"></dd>
+    <div class="modal-backdrop show"></div>
+    <div class="modern-modal">
+        <div class="modern-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle text-danger me-2"></i> ¿Eliminar equipo?</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Esta acción <strong>no se puede deshacer</strong>.
+                    El equipo con ID <strong th:text="${equipo.id}"></strong>, con el nombre
+                    <strong th:text="${equipo.nombreEquipo}"></strong>,
+                    será eliminado permanentemente del sistema.
+                </p>
 
-            <dt class = "col-sm-2">Nombre</dt>
-            <dd class = "col-sm-10" th:text="${equipo.nombreEquipo}"></dd>
+                <ul class="modal-details">
+                    <li><b>Nombre:</b> <span th:text="${equipo.nombreEquipo}"></span></li>
+                    <li><b>Descripción:</b> <span th:text="${equipo.descripcion}"></span></li>
+                    <li><b>Ubicación:</b> <span th:text="${equipo.ubicacion}"></span></li>
+                    <li><b>Estado:</b> <span th:text="${equipo.estado}"></span></li>
+                    <li><b>Fecha de Registro:</b> <span th:text="${#temporals.format(equipo.fechaRegistro, 'dd/MM/yyyy')}"></span></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <form th:action="@{/equipos/delete}" method="post">
+                    <input type="hidden" name="Id" th:value="${equipo.id}">
 
-            <dt class = "col-sm-2">Descripcion</dt>
-            <dd class = "col-sm-10" th:text="${equipo.descripcion}"></dd>
+                    <a th:href="@{/equipos}" class="btn-modern btn-secondary-modern">
+                        Cancelar
+                    </a>
 
-            <dt class = "col-sm-2">Ubicacion</dt>
-            <dd class = "col-sm-10" th:text="${equipo.ubicacion}"></dd>
-
-            <dt class = "col-sm-2">Estado</dt>
-            <dd class = "col-sm-10" th:text="${equipo.estado}"></dd>
-
-            <dt class="col-sm-2">Fecha de Registro</dt>
-            <dd class="col-sm-10"
-                th:text="${#temporals.format(equipo.fechaRegistro, 'dd/MM/yyyy')}"></dd>
-        </dl>
-
-        <h3>¿Está seguro que desea eliminar este registro?</h3>
-        <form th:action="@{/equipos/delete}" method="post">
-            <input type="hidden" name="Id" th:value="${equipo.id}">
-            <input type="submit" value="Eliminar"  class="btn btn-danger">
-            <a th:href="@{/equipos}">Regresar</a>
-        </form>
+                    <button type="submit" class="btn-modern btn-danger-modern">
+                        <i class="fas fa-trash-alt me-2"></i>Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        * { font-family: 'Poppins', sans-serif; }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+
+        .modern-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050;
+        }
+
+        .modern-modal-content {
+            background: #fff;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .modal-header h2 {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        .modal-body {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #495057;
+        }
+
+        .modal-body strong { color: #764ba2; }
+        .modal-details { margin-top: 1rem; list-style: none; padding: 0; }
+        .modal-details li { margin-bottom: 0.5rem; }
+        .modal-details li b { color: #764ba2; } /* Estilo para las etiquetas en negrita */
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Botones */
+        .btn-modern {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary-modern {
+            background: #f1f3f5;
+            color: #495057;
+        }
+
+        .btn-secondary-modern:hover {
+            background: #e0e3e7;
+        }
+
+        .btn-danger-modern {
+            background: #e63946;
+            color: white;
+            box-shadow: 0 4px 10px rgba(230,57,70,0.3);
+        }
+
+        .btn-danger-modern:hover {
+            background: #d62828;
+            box-shadow: 0 6px 15px rgba(230,57,70,0.5);
+        }
+
+        /* Animación */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</div>
 </html>
