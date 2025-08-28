@@ -83,4 +83,10 @@ public class Tarea {
 
     public void setEstado(String estado)
     { this.estado = estado; }
+
+    private String correoAsignado;
+
+    public String getCorreoAsignado() { return correoAsignado; }
+    public void setCorreoAsignado(String correoAsignado) { this.correoAsignado = correoAsignado; }
+
 }

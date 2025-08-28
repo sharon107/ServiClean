@@ -97,6 +97,7 @@ public class UsuarioController {
         }
     }
 
+
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model, RedirectAttributes attributes){
         Optional<Usuario> usuarioOptional = usuarioService.buscarPorId(id);

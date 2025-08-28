@@ -41,4 +41,11 @@ public class TareaService implements ITareaService {
     public void eliminarPorId(Integer id) {
         tareaRepository.deleteById(id);
     }
+
+    public void asignarTareaCorreo(Integer tareaId, String correo) {
+        Tarea tarea = tareaRepository.findById(tareaId).orElseThrow(() -> new RuntimeException("Tarea no encontrada"));
+        tarea.setCorreoAsignado(correo);
+        tareaRepository.save(tarea);
+    }
+
 }

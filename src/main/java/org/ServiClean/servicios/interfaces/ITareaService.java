@@ -17,4 +17,7 @@ public interface ITareaService {
     Tarea crearOEditar(Tarea tarea);
 
     void eliminarPorId(Integer id);
+
+    void asignarTareaCorreo(Integer tareaId, String correo);
+
 }
