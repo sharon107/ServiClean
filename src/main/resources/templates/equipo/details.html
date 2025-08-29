@@ -55,6 +55,63 @@
                             </a>
                         </div>
                     </form>
+
+                <!-- Encabezado -->
+                <div class="page-header mb-5">
+                    <h1 class="main-title">
+                        <i class="fas fa-info-circle me-3"></i>
+                        Detalles de Equipo
+                    </h1>
+                    <div class="title-underline"></div>
+                    <p class="page-subtitle">Visualice la información completa del equipo seleccionado</p>
+                </div>
+
+                <!-- Tarjeta de detalles -->
+                <div class="modern-card form-card">
+                    <div class="card-glow"></div>
+                    <div class="details-container">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-hashtag me-2"></i>ID:</span>
+                            <span class="detail-value" th:text="${equipo.id}"></span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-users me-2"></i>Nombre del Equipo:</span>
+                            <span class="detail-value" th:text="${equipo.nombreEquipo}"></span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-file-alt me-2"></i>Descripción:</span>
+                            <span class="detail-value" th:text="${equipo.descripcion}"></span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-map-marker-alt me-2"></i>Ubicación:</span>
+                            <span class="detail-value" th:text="${equipo.ubicacion}"></span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-check-circle me-2"></i>Estado:</span>
+                            <span class="detail-value" th:text="${equipo.estado}"></span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-calendar-alt me-2"></i>Fecha de Registro:</span>
+                            <span class="detail-value" th:text="${#temporals.format(equipo.fechaRegistro, 'dd/MM/yyyy')}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Botones -->
+                    <div class="action-buttons">
+                        <a th:href="@{/equipos/edit/{id}(id=${equipo.id})}" class="btn-modern btn-primary-modern">
+                            <i class="fas fa-edit me-2"></i>Editar
+                        </a>
+                        <a th:href="@{/equipos}" class="btn-modern btn-secondary-modern">
+                            <i class="fas fa-arrow-left me-2"></i>Regresar
+                        </a>
+                    </div>
                 </div>
 
             </div>
@@ -64,13 +121,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos CSS (mismos que formulario + extras para detalles) -->
+
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
             --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+
             --input-bg: rgba(245,247,250,0.7);
             --input-border: 1px solid rgba(245,247,250,0.9);
+
         }
 
         * { font-family: 'Poppins', sans-serif; }
@@ -110,6 +174,16 @@
             box-shadow: none;
         }
 
+        /* Estilo para la lista de detalles */
+        .details-container { display: flex; flex-direction: column; gap: 1.5rem; }
+        .detail-item { display: flex; flex-direction: column; padding: 1rem; border-radius: 15px; background: rgba(245,247,250,0.7); transition: background 0.3s ease; }
+        .detail-item:hover { background: rgba(245,247,250,1); }
+        .detail-label { font-weight: 600; color: #764ba2; margin-bottom: 0.3rem; font-size: 1rem; }
+        .detail-value { font-size: 1.1rem; color: #2c3e50; }
+
+        .form-divider { height: 2px; background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent); margin: 2rem 0; border-radius: 1px; }
+
+
         /* Botones modernos */
         .action-buttons { display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; }
         .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border: none; border-radius: 50px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; min-width: 150px; cursor: pointer; position: relative; overflow: hidden; }
@@ -132,5 +206,5 @@
             .btn-modern { min-width: 120px; font-size: 0.9rem; }
         }
     </style>
-</div>
+    </div>
 </html>
