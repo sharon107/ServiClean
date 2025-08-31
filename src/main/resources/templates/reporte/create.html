@@ -1,35 +1,127 @@
-<html lang="en"
+<!DOCTYPE html>
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layouts/_mainLayout">
+      layout:decorate="~{layouts/_mainLayout}">
 
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Reporte</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        * { font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; color: #2c3e50; }
+
+        .page-header { text-align: center; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .title-underline { width: 100px; height: 4px; background: var(--primary-gradient); margin: 0 auto 1.5rem; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; }
+        .page-subtitle { color: #6c757d; font-size: 1.1rem; font-weight: 500; }
+
+        .modern-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 25px; padding: 2.5rem; box-shadow: var(--card-shadow); border: 1px solid rgba(255,255,255,0.2); position: relative; animation: fadeInUp 0.8s ease forwards; }
+        .modern-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+
+        .input-group-modern { position: relative; margin-bottom: 1.5rem; }
+        .modern-label { display: block; margin-bottom: 0.8rem; font-weight: 600; color: #2c3e50; }
+        .modern-input { width: 100%; padding: 1rem 1.5rem; border: 2px solid rgba(108,117,125,0.2); border-radius: 15px; background: rgba(255,255,255,0.9); font-size: 1rem; transition: all 0.3s; }
+        .modern-input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); background: white; }
+
+        .form-divider { height: 2px; background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent); margin: 2rem 0; }
+
+        .action-buttons { display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+        .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem; cursor: pointer; min-width: 150px; transition: all 0.3s; }
+        .btn-primary-modern { background: var(--primary-gradient); color: white; }
+        .btn-secondary-modern { background: rgba(108,117,125,0.1); color: #6c757d; border: 2px solid rgba(108,117,125,0.2); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes expandWidth { from { width: 0; } to { width: 100px; } }
+    </style>
+</head>
+
+<body>
 <div layout:fragment="content">
-    <h1>Crear nuevo reporte</h1>
-    <form th:action="@{/reportes/save}" th:object="${reporte}" method="post">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="tipo">Tipo de reporte</label>
-                    <input type="text" class="form-control" th:field="*{tipo}" id="tipo" placeholder="Escriba el tipo de reporte" required>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <!-- Título principal -->
+                <div class="page-header mb-5">
+                    <h1 class="main-title">
+                        <i class="fas fa-file-alt me-3"></i>
+                        Crear Nuevo Reporte
+                    </h1>
+                    <div class="title-underline"></div>
+                    <p class="page-subtitle">Complete los datos para registrar un nuevo reporte en el sistema</p>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="generadoPor">Generado Por</label>
-                    <input type="text" class="form-control" th:field="*{generadoPor}" id="generadoPor" placeholder="Escriba su nombre" required>
+
+                <!-- Formulario -->
+                <div class="modern-card form-card">
+                    <form th:action="@{/reportes/save}" th:object="${reporte}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:field="*{fechaGenerado}">
+
+                        <div class="row g-4">
+                            <!-- Tipo de reporte -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-list-alt me-2"></i>Tipo de Reporte
+                                    </label>
+                                    <input type="text" th:field="*{tipo}" class="modern-input"
+                                           placeholder="Ej: Técnico, Auditoría" required>
+                                </div>
+                            </div>
+
+                            <!-- Generado por -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-user me-2"></i>Generado Por
+                                    </label>
+                                    <input type="text" th:field="*{generadoPor}" class="modern-input"
+                                           placeholder="Ingrese su nombre" required>
+                                </div>
+                            </div>
+
+                            <!-- Contenido -->
+                            <div class="col-md-12">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-align-left me-2"></i>Contenido del Reporte
+                                    </label>
+                                    <textarea th:field="*{contenido}" class="modern-input" rows="5"
+                                              placeholder="Escriba el contenido del reporte..." required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-divider"></div>
+
+                        <!-- Botones -->
+                        <div class="action-buttons">
+                            <button type="submit" class="btn-modern btn-primary-modern">
+                                <i class="fas fa-save me-2"></i>Guardar Reporte
+                            </button>
+                            <a th:href="@{/reportes}" class="btn-modern btn-secondary-modern">
+                                <i class="fas fa-arrow-left me-2"></i>Regresar
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="contenido">Contenido del reporte</label>
-                    <textarea class="form-control" th:field="*{contenido}" id="contenido" rows="5" placeholder="Escriba el contenido del reporte" required></textarea>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a th:href="@{/reportes}">Regresar</a>
-    </form>
+    </div>
 </div>
+</body>
+</html>

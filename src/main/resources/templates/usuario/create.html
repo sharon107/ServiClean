@@ -1,60 +1,181 @@
+<!DOCTYPE html>
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layouts/_mainLayout">
+      layout:decorate="~{layouts/_mainLayout}">
 
 <div layout:fragment="content">
-    <h1>Crear nuevo usuario</h1>
-    <form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre" required>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <meta charset="UTF-8">
+                <!-- Título principal -->
+                <div class="page-header mb-5">
+                    <h1 class="main-title">
+                        <i class="fas fa-user-plus me-3"></i>
+                        Crear Nuevo Usuario
+                    </h1>
+                    <div class="title-underline"></div>
+                    <p class="page-subtitle">Complete los datos para registrar un nuevo usuario en el sistema</p>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" class="form-control" th:field="*{apellido}" id="apellido" placeholder="Escriba el apellido" required>
+
+                <!-- Formulario -->
+                <div class="modern-card form-card">
+                    <div class="card-glow"></div>
+                    <form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
+
+                        <div class="row g-4">
+                            <!-- Nombre -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-user me-2"></i>Nombre
+                                    </label>
+                                    <input type="text" th:field="*{nombre}" class="modern-input"
+                                           placeholder="Escriba el nombre" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-user-tag me-2"></i>Apellido
+                                    </label>
+                                    <input type="text" th:field="*{apellido}" class="modern-input"
+                                           placeholder="Escriba el apellido" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Correo -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-envelope me-2"></i>Correo
+                                    </label>
+                                    <input type="email" th:field="*{correo}" class="modern-input"
+                                           placeholder="ejemplo@correo.com" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Contraseña -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-lock me-2"></i>Contraseña
+                                    </label>
+                                    <input type="password" th:field="*{contrasena}" class="modern-input"
+                                           placeholder="Ingrese la contraseña" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Roles -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-users-cog me-2"></i>Roles
+                                    </label>
+                                    <select th:field="*{roles}" class="modern-input" id="roles" multiple>
+                                        <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                                    </select>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-toggle-on me-2"></i>Estado
+                                    </label>
+                                    <select th:field="*{estado}" id="estado" class="modern-input" required>
+                                        <option value="" disabled selected>Seleccione un estado</option>
+                                        <option th:value="true">Activo</option>
+                                        <option th:value="false">Inactivo</option>
+                                    </select>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-divider"></div>
+
+                        <!-- Botones -->
+                        <div class="action-buttons">
+                            <button type="submit" class="btn-modern btn-primary-modern">
+                                <i class="fas fa-save me-2"></i>Guardar Usuario
+                            </button>
+                            <a th:href="@{/usuarios}" class="btn-modern btn-secondary-modern">
+                                <i class="fas fa-arrow-left me-2"></i>Regresar
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="correo">Correo</label>
-                    <input type="email" class="form-control" th:field="*{correo}" id="correo" placeholder="Escriba el correo" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="contrasena">Contraseña</label>
-                    <input type="password" class="form-control" th:field="*{contrasena}" id="contrasena" placeholder="Escriba la contraseña" required>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="roles">Roles</label>
-                    <select class="form-control" th:field="*{roles}" id="roles" multiple>
-                        <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="estado">Estado</label>
-                    <select class="form-control" th:field="*{estado}" id="estado">
-                        <option value="true">Activo</option>
-                        <option value="false">Inactivo</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a th:href="@{/usuarios}">Regresar</a>
-    </form>
+    </div>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Reutilizando estilos del diseño moderno -->
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        * { font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; color: #2c3e50; }
+
+        .page-header { text-align: center; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .title-underline { width: 100px; height: 4px; background: var(--primary-gradient); margin: 0 auto 1.5rem; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; }
+        .page-subtitle { color: #6c757d; font-size: 1.1rem; font-weight: 500; }
+
+        .modern-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 25px; padding: 2.5rem; box-shadow: var(--card-shadow); border: 1px solid rgba(255,255,255,0.2); position: relative; animation: fadeInUp 0.8s ease forwards; }
+        .modern-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+
+        .input-group-modern { position: relative; margin-bottom: 1.5rem; }
+        .modern-label { display: block; margin-bottom: 0.8rem; font-weight: 600; color: #2c3e50; }
+        .modern-input { width: 100%; padding: 1rem 1.5rem; border: 2px solid rgba(108,117,125,0.2); border-radius: 15px; background: rgba(255,255,255,0.9); font-size: 1rem; transition: all 0.3s; }
+        .modern-input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); background: white; }
+
+        .estado-activo { border-color: #28a745 !important; background: rgba(40,167,69,0.1) !important; color: #28a745 !important; font-weight: 600; }
+        .estado-inactivo { border-color: #dc3545 !important; background: rgba(220,53,69,0.1) !important; color: #dc3545 !important; font-weight: 600; }
+
+        .form-divider { height: 2px; background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent); margin: 2rem 0; }
+
+        .action-buttons { display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+        .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem; cursor: pointer; min-width: 150px; transition: all 0.3s; }
+        .btn-primary-modern { background: var(--primary-gradient); color: white; }
+        .btn-secondary-modern { background: rgba(108,117,125,0.1); color: #6c757d; border: 2px solid rgba(108,117,125,0.2); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes expandWidth { from { width: 0; } to { width: 100px; } }
+    </style>
+
+    <!-- Script para cambiar estilos dinámicamente -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const estadoSelect = document.getElementById("estado");
+
+            estadoSelect.addEventListener("change", function () {
+                this.classList.remove("estado-activo", "estado-inactivo");
+                if (this.value === "true") {
+                    this.classList.add("estado-activo");
+                } else if (this.value === "false") {
+                    this.classList.add("estado-inactivo");
+                }
+            });
+        });
+    </script>
 </div>
+</html>

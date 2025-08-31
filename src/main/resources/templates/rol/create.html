@@ -3,121 +3,146 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/_mainLayout}">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Nuevo Rol</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
 
-<body class="bg-gray-50 min-h-screen">
-<div layout:fragment="content" class="max-w-4xl mx-auto py-8 px-4">
+<div layout:fragment="content">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
 
-    <!-- Header -->
-    <div class="mb-8">
-        <div class="flex items-center gap-3 mb-2">
-            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <i class="fas fa-user-plus text-purple-600 text-lg"></i>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-900">Crear Nuevo Rol</h1>
-        </div>
-        <p class="text-gray-600">Define un nuevo rol dentro del sistema</p>
-    </div>
+                <meta charset="UTF-8">
+                <!-- Título principal -->
+                <div class="page-header mb-5">
+                    <h1 class="main-title">
+                        <i class="fas fa-user-plus me-3"></i>
+                        Crear Nuevo Rol
+                    </h1>
+                    <div class="title-underline"></div>
+                    <p class="page-subtitle">Complete los datos para registrar un nuevo rol en el sistema</p>
+                </div>
 
-    <!-- Formulario -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-8 py-6 border-b border-gray-100">
-            <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                <i class="fas fa-cog text-gray-500"></i>
-                Información del Rol
-            </h2>
-        </div>
+                <!-- Formulario -->
+                <div class="modern-card form-card">
+                    <div class="card-glow"></div>
+                    <form th:action="@{/roles/save}" th:object="${rol}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:field="*{fechaCreacion}">
+                        <input type="hidden" th:field="*{fechaEdicion}">
 
-        <form th:action="@{/roles/save}" th:object="${rol}" method="post" class="px-8 py-6 space-y-6">
-            <!-- ID (oculto) -->
-            <input type="hidden" th:field="*{id}">
+                        <div class="row g-4">
+                            <!-- Nombre -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-tag me-2"></i>Nombre del Rol
+                                    </label>
+                                    <input type="text" th:field="*{nombre}" class="modern-input"
+                                           placeholder="Ej: Administrador, Editor" required>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Nombre -->
-                <div class="md:col-span-1">
-                    <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">
-                        Nombre del Rol <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="nombre" th:field="*{nombre}" placeholder="Ej: Administrador, Editor"
-                               required
-                               class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500
-                                      focus:border-transparent transition-all duration-200
-                                      placeholder-gray-400 border-gray-300">
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <i class="fas fa-tag text-gray-400"></i>
+                            <!-- Descripción -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-file-alt me-2"></i>Descripción
+                                    </label>
+                                    <textarea th:field="*{descripcion}" class="modern-input" rows="3"
+                                              placeholder="Describe las responsabilidades de este rol..." required></textarea>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="col-md-6">
+                                <div class="input-group-modern">
+                                    <label class="modern-label">
+                                        <i class="fas fa-toggle-on me-2"></i>Estado
+                                    </label>
+                                    <select id="estado" th:field="*{estado}" class="modern-input" required>
+                                        <option value="" disabled selected>Seleccione un estado</option>
+                                        <option th:value="true">Activo</option>
+                                        <option th:value="false">Inactivo</option>
+                                    </select>
+                                    <div class="input-highlight"></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <p th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"
-                       class="text-red-600 text-sm mt-1 flex items-center gap-1">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span></span>
-                    </p>
-                </div>
 
-                <!-- Descripción -->
-                <div class="md:col-span-1">
-                    <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-2">
-                        Descripción <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="descripcion" th:field="*{descripcion}" rows="3"
-                              required
-                              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500
-                                     focus:border-transparent transition-all duration-200 placeholder-gray-400 resize-none"
-                              placeholder="Describe las responsabilidades de este rol..."></textarea>
-                    <p th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"
-                       class="text-red-600 text-sm mt-1 flex items-center gap-1">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span></span>
-                    </p>
+                        <div class="form-divider"></div>
+
+                        <!-- Botones -->
+                        <div class="action-buttons">
+                            <button type="submit" class="btn-modern btn-primary-modern">
+                                <i class="fas fa-save me-2"></i>Guardar Rol
+                            </button>
+                            <a th:href="@{/roles}" class="btn-modern btn-secondary-modern">
+                                <i class="fas fa-arrow-left me-2"></i>Regresar
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <!-- Estado -->
-            <div>
-                <label for="estado" class="block text-sm font-medium text-gray-700 mb-2">Estado <span class="text-red-500">*</span></label>
-                <select id="estado" th:field="*{estado}" required
-                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500
-                               focus:border-transparent transition-all duration-200 border-gray-300">
-                    <option value="" disabled selected>Seleccione un estado</option>
-                    <option th:value="true" th:text="'Activo'"></option>
-                    <option th:value="false" th:text="'Inactivo'"></option>
-                </select>
-                <p th:if="${#fields.hasErrors('estado')}" th:errors="*{estado}"
-                   class="text-red-600 text-sm mt-1 flex items-center gap-1">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span></span>
-                </p>
-            </div>
-
-            <!-- Fechas automáticas (ocultas) -->
-            <input type="hidden" th:field="*{fechaCreacion}">
-            <input type="hidden" th:field="*{fechaEdicion}">
-
-            <!-- Botones -->
-            <div class="flex items-center justify-between pt-6 border-t border-gray-100">
-                <a th:href="@{/roles}" class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800
-                transition-colors">
-                    <i class="fas fa-arrow-left"></i> Regresar </a>
-                <div class="flex gap-3">
-                    <button type="button" th:onclick="|window.location='@{/roles}'|"
-                            class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all
-                             duration-200 font-medium">
-                        Cancelar </button>
-                    <button type="submit"
-                            class="px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700
-                                   transition-all duration-200 font-medium shadow-sm flex items-center gap-2">
-                        <i class="fas fa-save"></i> Guardar Rol
-                    </button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        * { font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; color: #2c3e50; }
+
+        .page-header { text-align: center; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .title-underline { width: 100px; height: 4px; background: var(--primary-gradient); margin: 0 auto 1.5rem; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; }
+        .page-subtitle { color: #6c757d; font-size: 1.1rem; font-weight: 500; }
+
+        .modern-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 25px; padding: 2.5rem; box-shadow: var(--card-shadow); border: 1px solid rgba(255,255,255,0.2); position: relative; animation: fadeInUp 0.8s ease forwards; }
+        .modern-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+
+        .input-group-modern { position: relative; margin-bottom: 1.5rem; }
+        .modern-label { display: block; margin-bottom: 0.8rem; font-weight: 600; color: #2c3e50; }
+        .modern-input { width: 100%; padding: 1rem 1.5rem; border: 2px solid rgba(108,117,125,0.2); border-radius: 15px; background: rgba(255,255,255,0.9); font-size: 1rem; transition: all 0.3s; }
+        .modern-input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); background: white; }
+
+        /* Estado dinámico */
+        .estado-activo { border-color: #28a745 !important; background: rgba(40,167,69,0.1) !important; color: #28a745 !important; font-weight: 600; }
+        .estado-inactivo { border-color: #dc3545 !important; background: rgba(220,53,69,0.1) !important; color: #dc3545 !important; font-weight: 600; }
+
+        .form-divider { height: 2px; background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent); margin: 2rem 0; }
+
+        .action-buttons { display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+        .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem; cursor: pointer; min-width: 150px; transition: all 0.3s; }
+        .btn-primary-modern { background: var(--primary-gradient); color: white; }
+        .btn-secondary-modern { background: rgba(108,117,125,0.1); color: #6c757d; border: 2px solid rgba(108,117,125,0.2); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes expandWidth { from { width: 0; } to { width: 100px; } }
+    </style>
+
+    <!-- Script para cambiar estilos dinámicamente -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const estadoSelect = document.getElementById("estado");
+
+            estadoSelect.addEventListener("change", function () {
+                this.classList.remove("estado-activo", "estado-inactivo");
+                if (this.value === "true") {
+                    this.classList.add("estado-activo");
+                } else if (this.value === "false") {
+                    this.classList.add("estado-inactivo");
+                }
+            });
+        });
+    </script>
 </div>
-</body>
 </html>
