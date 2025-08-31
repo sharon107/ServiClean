@@ -1,64 +1,173 @@
-<html lang="en"
+<html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/_mainLayout">
 
 <div layout:fragment="content">
 
-    <div th:if="${mg != null}">
+    <!-- Alertas con SweetAlert -->
+    <div th:if="${msg != null}">
         <script>
-            Swal.fire({
-            title: "confirmación",
-            text: '[[${msg}]]',
-            icon: "success"
-            });
+            Swal.fire({ title: "Confirmación", text: '[[${msg}]]', icon: "success" });
         </script>
     </div>
-
     <div th:if="${error != null}">
         <script>
-            Swal.fire({
-            title: "Error",
-            text: '[[${error}]]',
-            icon: "error"
-            });
+            Swal.fire({ title: "Error", text: '[[${error}]]', icon: "error" });
         </script>
     </div>
 
-    <h1>Listado de Reportes</h1>
-    <a th:href="@{/reportes/create}" class="btn btn-outline-primary">Nuevo reporte</a>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tipo</th>
-            <th>Fecha Generado</th>
-            <th>Generado Por</th>
-            <th>Contenido</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${reportes}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.tipo}"></td>
-            <td th:text="${item.fechaGenerado}"></td>
-            <td th:text="${item.generadoPor}"></td>
-            <td th:text="${item.contenido}"></td>
-            <td>
-                <a th:href="@{/reportes/details/{id}(id=${item.id})}" class="btn btn-outline-secondary">Detalles</a>
-                <a th:href="@{/reportes/edit/{id}(id=${item.id})}" class="btn btn-outline-info">Editar</a>
-                <a th:href="@{/reportes/remove/{id}(id=${item.id})}" class="btn btn-outline-danger">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- Encabezado con animación -->
+    <meta charset="UTF-8">
+    <div class="page-header mb-4 text-center">
+        <h1 class="main-title">
+            <i class="fas fa-file-alt me-3"></i>
+            Listado de Reportes
+        </h1>
+        <div class="title-underline"></div>
+    </div>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                <a class="page-link" th:href="@{|/reportes?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+    <!-- Botón Nuevo Reporte -->
+    <div class="d-flex justify-content-end mb-4">
+        <a th:href="@{/reportes/create}" class="btn-modern btn-primary-modern">
+            <i class="fas fa-plus me-2"></i> Nuevo Reporte
+        </a>
+    </div>
+
+    <!-- Tabla con diseño avanzado -->
+    <div class="table-container">
+        <table class="table-modern">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Fecha Generado</th>
+                <th>Generado Por</th>
+                <th>Contenido</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${reportes}" class="table-row">
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.tipo}"></td>
+                <td th:text="${#temporals.format(item.fechaGenerado, 'dd/MM/yyyy')}"></td>
+                <td th:text="${item.generadoPor}"></td>
+                <td th:text="${item.contenido}"></td>
+                <td class="actions-cell">
+                    <a th:href="@{/reportes/details/{id}(id=${item.id})}" class="btn-modern btn-info-modern">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a th:href="@{/reportes/edit/{id}(id=${item.id})}" class="btn-modern btn-warning-modern">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a th:href="@{/reportes/remove/{id}(id=${item.id})}" class="btn-modern btn-danger-modern">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation" class="pagination-container">
+        <ul class="pagination-modern">
+            <li th:each="pageNumber : ${pageNumbers}">
+                <a th:href="@{|/reportes?page=${pageNumber}|}" th:text="${pageNumber}"></a>
             </li>
         </ul>
     </nav>
+
+    <!-- Estilos completos -->
+    <style>
+        * { font-family: 'Poppins', sans-serif; }
+
+        /* Encabezado */
+        .page-header { text-align: center; margin-bottom: 3rem; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .title-underline { width: 100px; height: 4px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0 auto; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; }
+
+        /* Tabla */
+        .table-container {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease forwards;
+        }
+        .table-modern {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px;
+        }
+        .table-modern thead tr {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            font-size: 1rem;
+        }
+        .table-modern th, .table-modern td { padding: 14px 18px; text-align: left; }
+        .table-modern tbody tr {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .table-modern tbody tr:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+
+        /* Botones */
+        .btn-modern {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .btn-modern i { font-size: 1rem; }
+        .btn-primary-modern { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .btn-info-modern { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .btn-warning-modern { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .btn-danger-modern { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .btn-modern:hover { transform: scale(1.05); }
+
+        /* Botones alineados */
+        .actions-cell { display: flex; justify-content: center; gap: 10px; }
+
+        /* Paginación */
+        .pagination-modern { display: flex; justify-content: center; gap: 8px; list-style: none; margin-top: 2rem; }
+        .pagination-modern a {
+            padding: 8px 14px;
+            background: #f1f3f8;
+            border-radius: 8px;
+            font-weight: 500;
+            color: #444;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .pagination-modern a:hover { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+
+        /* Animaciones */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: translateY(0);} }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px);} to { opacity: 1; transform: translateY(0);} }
+        @keyframes expandWidth { from {width: 0;} to {width: 100px;} }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title { font-size: 2rem; }
+            .table-modern { font-size: 0.85rem; }
+        }
+    </style>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </div>
+</html>

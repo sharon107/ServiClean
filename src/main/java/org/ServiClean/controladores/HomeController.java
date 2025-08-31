@@ -9,18 +9,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 public class HomeController {
+
     @GetMapping
-    public String index(){
+    public String index() {
+        return "home/index";
+    }
+
+    // Agrega este método para que /home/index también funcione
+    @GetMapping("/home/index")
+    public String dashboard() {
         return "home/index";
     }
 
     @GetMapping("/login")
-    public String mostrarLogin(){
+    public String mostrarLogin() {
         return "home/formLogin";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request){
+    public String logout(HttpServletRequest request) {
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, null, null);
         return "redirect:/";

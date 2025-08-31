@@ -1,49 +1,111 @@
+<!DOCTYPE html>
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layouts/_mainLayout">
+      layout:decorate="~{layouts/_mainLayout}">
 
-<div layout:fragment="content">
-    <h1>Editar Reporte</h1>
-    <form th:action="@{/reportes/save}" th:object="${reporte}" method="post">
-        <input type="hidden" th:field="*{id}">
-        <input type="hidden" th:field="*{generadoPor}" />
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Reporte</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="tipo">Tipo de Reporte</label>
-                    <input type="text" class="form-control" th:field="*{tipo}" id="tipo" required>
-                </div>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --hover-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        * { font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; color: #2c3e50; }
+
+        .page-header { text-align: center; animation: slideInDown 0.8s ease; }
+        .main-title { font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .title-underline { width: 100px; height: 4px; background: var(--primary-gradient); margin: 0 auto 1.5rem; border-radius: 2px; animation: expandWidth 1s ease 0.5s both; }
+        .page-subtitle { color: #6c757d; font-size: 1.1rem; font-weight: 500; }
+
+        .modern-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 25px; padding: 2.5rem; box-shadow: var(--card-shadow); border: 1px solid rgba(255,255,255,0.2); position: relative; transition: all 0.4s ease; animation: fadeInUp 0.8s ease forwards; }
+        .modern-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+        .card-glow { position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: var(--primary-gradient); border-radius: 25px; opacity: 0; z-index: -1; transition: opacity 0.3s ease; }
+        .modern-card:hover .card-glow { opacity: 0.1; animation: rotate 3s linear infinite; }
+
+        .detail-label { font-weight: 600; color: #764ba2; margin-bottom: 0.3rem; font-size: 1rem; }
+        .styled-input { border-radius: 15px; padding: 0.8rem; background: rgba(245,247,250,0.7); border: 1px solid rgba(0,0,0,0.1); transition: all 0.3s ease; width: 100%; }
+        .styled-input:focus { background: #fff; box-shadow: 0 0 0 0.2rem rgba(118,75,162,0.25); outline: none; }
+
+        .form-divider { height: 2px; background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent); margin: 2rem 0; border-radius: 1px; }
+
+        .action-buttons { display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+        .btn-modern { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border: none; border-radius: 50px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; min-width: 150px; cursor: pointer; position: relative; overflow: hidden; }
+        .btn-modern::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
+        .btn-modern:hover::before { left: 100%; }
+        .btn-primary-modern { background: var(--primary-gradient); color: white; box-shadow: 0 4px 15px rgba(102,126,234,0.3); }
+        .btn-primary-modern:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(102,126,234,0.4); }
+        .btn-secondary-modern { background: rgba(108,117,125,0.1); color: #6c757d; border: 2px solid rgba(108,117,125,0.2); }
+        .btn-secondary-modern:hover { background: rgba(108,117,125,0.2); color: #495057; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(108,117,125,0.2); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes expandWidth { from { width: 0; } to { width: 100px; } }
+        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content" class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Encabezado -->
+            <div class="page-header mb-5">
+                <h1 class="main-title">
+                    <i class="fas fa-file-alt me-3"></i>
+                    Editar Reporte
+                </h1>
+                <div class="title-underline"></div>
+                <p class="page-subtitle">Modifica los datos del reporte seleccionado</p>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="generadoPor">Generado Por</label>
-                    <input type="text" class="form-control" th:field="*{generadoPor}" id="generadoPor">
-                </div>
+
+            <!-- Tarjeta de edición -->
+            <div class="modern-card form-card">
+                <div class="card-glow"></div>
+
+                <form th:action="@{/reportes/save}" th:object="${reporte}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{generadoPor}">
+
+                    <div class="form-group mb-4">
+                        <label for="tipo" class="detail-label"><i class="fas fa-file-signature me-2"></i>Tipo de Reporte</label>
+                        <input type="text" id="tipo" th:field="*{tipo}" class="form-control styled-input" placeholder="Ej: Mantenimiento, Incidencia" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="contenido" class="detail-label"><i class="fas fa-align-left me-2"></i>Contenido</label>
+                        <textarea id="contenido" th:field="*{contenido}" rows="5" class="form-control styled-input" placeholder="Describe el contenido del reporte" required></textarea>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="fechaGenerado" class="detail-label"><i class="fas fa-calendar-alt me-2"></i>Fecha de Generación</label>
+                        <input type="text" id="fechaGenerado" th:field="*{fechaGenerado}" class="form-control styled-input" readonly>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Botones -->
+                    <div class="action-buttons">
+                        <a th:href="@{/reportes}" class="btn-modern btn-secondary-modern">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn-modern btn-primary-modern">
+                            <i class="fas fa-save me-2"></i>Guardar cambios
+                        </button>
+                    </div>
+                </form>
             </div>
+
         </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="fechaGenerado">Fecha de Generación</label>
-                    <input type="text" class="form-control" th:field="*{fechaGenerado}" id="fechaGenerado" readonly>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="contenido">Contenido</label>
-                    <textarea class="form-control" th:field="*{contenido}" id="contenido" rows="5" required></textarea>
-                </div>
-            </div>
-        </div>
-
-        <hr>
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        <a th:href="@{/reportes}" class="btn btn-secondary">Regresar</a>
-    </form>
+    </div>
 </div>
+</body>
+</html>
